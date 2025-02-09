@@ -7,10 +7,10 @@ export const logger = winston.createLogger({
     winston.format.json()
   ),
   transports: [
-    new winston.transports.Stream({
-      stream: process.stderr,
-      level: "info"
-    }),
+    // new winston.transports.Stream({
+    //   stream: process.stderr,
+    //   level: "info"
+    // }),
     new winston.transports.File({ filename: "linear-mcp.log", level: "info" })
   ],
 }); 
