@@ -19,7 +19,7 @@ export function getLinearClient(): LinearClient {
   return client;
 }
 
-// テスト用にクライアントをリセットする関数を追加
+// For testing purposes, reset the Linear client
 export function resetLinearClient(): void {
   client = null;
 } 

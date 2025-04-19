@@ -1,196 +1,367 @@
 import { InvalidInputLinearError, LinearError } from "@linear/sdk";
-import { ReadResourceTemplateCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getLinearClient } from "../utils/linear.js";
 import { logger } from "../utils/logger.js";
+import {
+  GetProjectIssuesSchema,
+  GetIssueSchema,
+  GetProjectStatusesSchema,
+  GetIssuePrioritiesSchema,
+} from "../schemas/issues.js";
+import { PaginationOrderBy } from "@linear/sdk/dist/_generated_documents.js";
 
-export const getProjectIssuesResource: ReadResourceTemplateCallback = async (uri, variables) => {
+export const getProjectIssuesResource: ToolCallback<
+  typeof GetProjectIssuesSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
-    const project = await client.project(variables.projectId as string);
+    const project = await client.project(args.projectId as string);
     const issues = await project.issues({
       filter: {
         state: {
-          type: { nin: ["completed", "canceled"] }
-        }
-      }
+          type: { nin: ["completed", "canceled"] },
+        },
+      },
+      orderBy: PaginationOrderBy.UpdatedAt,
+      first: 100,
     });
 
     return {
-      contents: [{
-        uri: uri.href,
-        text: JSON.stringify({
-          project,
-          issues: issues.nodes
-        }, null, 2),
-        mimeType: "application/json"
-      }]
+      content: [
+        {
+          type: "resource" as const,
+          resource: {
+            uri: `issues://projects/${args.projectId}/issues`,
+            text: JSON.stringify(
+              {
+                project: {
+                  id: project.id,
+                  name: project.name,
+                  description: project.description,
+                  state: project.state,
+                },
+                issues: issues.nodes.map((issue) => ({
+                  id: issue.id,
+                  title: issue.title,
+                  description: issue.description,
+                  state: {
+                    type: issue.state,
+                    name: issue.state,
+                  },
+                })),
+              },
+              null,
+              2,
+            ),
+            mimeType: "application/json",
+          },
+        },
+      ],
     };
   } catch (error) {
     logger.error("Failed to get project issues", {
       error: error instanceof Error ? error.message : "Unknown error",
-      projectId: variables.projectId
+      projectId: args.projectId,
     });
 
     if (error instanceof InvalidInputLinearError) {
       return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify({
-            error: "Invalid input",
-            message: error.message
-          }, null, 2),
-          mimeType: "application/json"
-        }]
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                error: "Invalid input",
+                message: error.message,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+        isError: true,
       };
     }
     if (error instanceof LinearError) {
       return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify({
-            error: "Linear API error",
-            message: error.message
-          }, null, 2),
-          mimeType: "application/json"
-        }]
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                error: "Linear API error",
+                message: error.message,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+        isError: true,
       };
     }
     return {
-      contents: [{
-        uri: uri.href,
-        text: JSON.stringify({
-          error: "Unexpected error",
-          message: error instanceof Error ? error.message : "Unknown error"
-        }, null, 2),
-        mimeType: "application/json"
-      }]
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              error: "Unexpected error",
+              message: error instanceof Error ? error.message : "Unknown error",
+            },
+            null,
+            2,
+          ),
+        },
+      ],
+      isError: true,
     };
   }
 };
 
-export const getInitiativeIssuesResource: ReadResourceTemplateCallback = async (uri, variables) => {
+export const getIssueResource: ToolCallback<
+  typeof GetIssueSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
-    const initiative = await client.initiative(variables.initiativeId as string);
-    const projects = await initiative.projects();
-    
-    const projectIssues = await Promise.all(
-      projects.nodes.map(async (project) => {
-        const issues = await project.issues({
-          filter: {
-            state: {
-              type: { nin: ["completed", "canceled"] }
+    const issue = await client.issue(args.issueId as string);
+    const commentsData = (async () => {
+      if (!args.includeComments) {
+        return [];
+      }
+      const comments = await issue.comments({
+        includeArchived: false,
+        orderBy: PaginationOrderBy.CreatedAt,
+      });
+      return await Promise.all(
+        comments.nodes.map(async (comment) => ({
+          id: comment.id,
+          body: comment.body,
+          user: await (async () => {
+            const user = await comment.user;
+            if (!user) {
+              return null;
             }
-          }
-        });
-        return issues.nodes;
-      })
-    );
+            return {
+              id: user.id,
+              name: user.name,
+            };
+          })(),
+          createdAt: comment.createdAt,
+        })),
+      );
+    })();
 
-    return {
-      contents: [{
-        uri: uri.href,
-        text: JSON.stringify({
-          initiative,
-          issues: projectIssues.flat()
-        }, null, 2),
-        mimeType: "application/json"
-      }]
-    };
-  } catch (error) {
-    logger.error("Failed to get initiative issues", {
-      error: error instanceof Error ? error.message : "Unknown error",
-      initiativeId: variables.initiativeId
-    });
+    const childrenData = (async () => {
+      if (!args.includeChildren) {
+        return [];
+      }
+      const children = await issue.children();
+      return children.nodes.map((child) => {
+        return {
+          id: child.id,
+          title: child.title,
+          description: child.description,
+          state: {
+            type: child.state,
+            name: child.state,
+          },
+        };
+      });
+    })();
 
-    if (error instanceof InvalidInputLinearError) {
+    const parentData = (async () => {
+      if (!args.includeParent) {
+        return null;
+      }
+      const parent = await issue.parent;
+      if (!parent) {
+        return null;
+      }
       return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify({
-            error: "Invalid input",
-            message: error.message
-          }, null, 2),
-          mimeType: "application/json"
-        }]
+        id: parent.id,
+        title: parent.title,
+        description: parent.description,
+        state: {
+          type: parent.state,
+          name: parent.state,
+        },
       };
-    }
-    if (error instanceof LinearError) {
-      return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify({
-            error: "Linear API error",
-            message: error.message
-          }, null, 2),
-          mimeType: "application/json"
-        }]
-      };
-    }
+    })();
     return {
-      contents: [{
-        uri: uri.href,
-        text: JSON.stringify({
-          error: "Unexpected error",
-          message: error instanceof Error ? error.message : "Unknown error"
-        }, null, 2),
-        mimeType: "application/json"
-      }]
-    };
-  }
-};
-
-export const getIssueResource: ReadResourceTemplateCallback = async (uri, variables) => {
-  const client = getLinearClient();
-  try {
-    const issue = await client.issue(variables.issueId as string);
-    
-    return {
-      contents: [{
-        uri: uri.href,
-        text: JSON.stringify(issue, null, 2),
-        mimeType: "application/json"
-      }]
+      content: [
+        {
+          type: "resource" as const,
+          resource: {
+            uri: `issues://${args.issueId}`,
+            text: JSON.stringify(
+              {
+                issue: {
+                  id: issue.id,
+                  title: issue.title,
+                  description: issue.description,
+                  state: {
+                    type: issue.state,
+                    name: issue.state,
+                  },
+                  comments: commentsData,
+                  children: childrenData,
+                  parent: parentData,
+                },
+              },
+              null,
+              2,
+            ),
+            mimeType: "application/json",
+          },
+        },
+      ],
     };
   } catch (error) {
     logger.error("Failed to get issue", {
       error: error instanceof Error ? error.message : "Unknown error",
-      issueId: variables.issueId
+      issueId: args.issueId,
     });
 
     if (error instanceof InvalidInputLinearError) {
       return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify({
-            error: "Invalid input",
-            message: error.message
-          }, null, 2),
-          mimeType: "application/json"
-        }]
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                error: "Invalid input",
+                message: error.message,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+        isError: true,
       };
     }
     if (error instanceof LinearError) {
       return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify({
-            error: "Linear API error",
-            message: error.message
-          }, null, 2),
-          mimeType: "application/json"
-        }]
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                error: "Linear API error",
+                message: error.message,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+        isError: true,
       };
     }
     return {
-      contents: [{
-        uri: uri.href,
-        text: JSON.stringify({
-          error: "Unexpected error",
-          message: error instanceof Error ? error.message : "Unknown error"
-        }, null, 2),
-        mimeType: "application/json"
-      }]
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              error: "Unexpected error",
+              message: error instanceof Error ? error.message : "Unknown error",
+            },
+            null,
+            2,
+          ),
+        },
+      ],
+      isError: true,
     };
   }
-}; 
+};
+
+export const getProjectStatusesResource: ToolCallback<
+  typeof GetProjectStatusesSchema.shape
+> = async (args, extra) => {
+  const client = getLinearClient();
+  try {
+    const statuses = await client.projectStatuses();
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              statuses: statuses.nodes.map((s) => ({
+                id: s.id,
+                name: s.name,
+                description: s.description,
+                position: s.position,
+              })),
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
+        },
+      ],
+    };
+  } catch (error) {
+    logger.error("Failed to get project statuses", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            { error: "Failed to get project statuses" },
+            null,
+            2,
+          ),
+        },
+      ],
+    };
+  }
+};
+
+export const getIssuePrioritiesResource: ToolCallback<
+  typeof GetIssuePrioritiesSchema.shape
+> = async (args, extra) => {
+  const client = getLinearClient();
+  try {
+    const priorities = await client.issuePriorityValues;
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              priorities: priorities.map((p) => ({
+                label: p.label,
+                priority: p.priority,
+              })),
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
+        },
+      ],
+    };
+  } catch (error) {
+    logger.error("Failed to get issue priorities", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            { error: "Failed to get issue priorities" },
+            null,
+            2,
+          ),
+        },
+      ],
+    };
+  }
+};

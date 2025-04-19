@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getViewerResource } from "./resources/viewer.js";
-import { getProjectIssuesResource, getInitiativeIssuesResource, getIssueResource } from "./resources/issues.js";
-import { getInitiativesResource, getInitiativeResource } from "./resources/initiative.js";
-import { getProjectsResource, getProjectResource } from "./resources/project.js";
-import { CreateIssueSchema } from "./schemas/issues.js";
-import { createIssueTool } from "./tools/issues.js";
+import { getIssueResource, getProjectIssuesResource, getProjectStatusesResource } from "./resources/issues.js";
+import { getIssueLabelsResource } from "./resources/labels.js";
+import { getProjectResource, getProjectsResource } from "./resources/project.js";
+import { CreateCommentSchema, DeleteCommentSchema, GetIssueCommentsSchema, UpdateCommentSchema } from "./schemas/comments.js";
+import { CreateIssueSchema, DeleteIssueSchema, GetIssueLabelsSchema, GetIssueSchema, GetProjectIssuesSchema, GetProjectSchema, GetProjectsSchema, GetProjectStatusesSchema, UpdateIssueEstimateSchema, UpdateIssueLabelsSchema, UpdateIssuePrioritySchema, UpdateIssueSchema, UpdateIssueStateSchema } from "./schemas/issues.js";
+import { createCommentTool, deleteCommentTool, getIssueCommentsResource, updateCommentTool } from "./tools/comments.js";
+import { createIssueTool, deleteIssueTool, updateIssueEstimateTool, updateIssueLabelsTool, updateIssuePriorityTool, updateIssueStateTool, updateIssueTool } from "./tools/issues.js";
 import { logger } from "./utils/logger.js";
 
 const server = new McpServer({
@@ -16,68 +16,46 @@ const server = new McpServer({
   version: "1.0.0"
 });
 
-// Define viewer resource
-server.resource(
-  "viewer",
-  "viewer://me",
-  { mimeType: "application/json" },
-  getViewerResource
-);
-
 // Define projects list resource
-server.resource(
+server.tool(
   "projects",
-  "projects://list",
-  { mimeType: "application/json" },
+  GetProjectsSchema.shape,
   getProjectsResource
 );
 
 // Define single project resource
-server.resource(
+server.tool(
   "project",
-  new ResourceTemplate("projects://{projectId}", { list: undefined }),
-  { mimeType: "application/json" },
+  GetProjectSchema.shape,
   getProjectResource
 );
 
-// Define initiatives list resource
-server.resource(
-  "initiatives",
-  "initiatives://list",
-  { mimeType: "application/json" },
-  getInitiativesResource
-);
-
-// Define single initiative resource
-server.resource(
-  "initiative",
-  new ResourceTemplate("initiatives://{initiativeId}", { list: undefined }),
-  { mimeType: "application/json" },
-  getInitiativeResource
-);
-
 // Define single issue resource
-server.resource(
+server.tool(
   "issue",
-  new ResourceTemplate("issues://{issueId}", { list: undefined }),
-  { mimeType: "application/json" },
+  GetIssueSchema.shape,
   getIssueResource
 );
 
+// Define project statuses resource
+server.tool(
+  "project-statuses",
+  GetProjectStatusesSchema.shape,
+  getProjectStatusesResource
+);
+
 // Define project issues resource
-server.resource(
+server.tool(
   "project-issues",
-  new ResourceTemplate("issues://project/{projectId}", { list: undefined }),
-  { mimeType: "application/json" },
+  GetProjectIssuesSchema.shape,
   getProjectIssuesResource
 );
 
-// Define initiative issues resource
-server.resource(
-  "initiative-issues",
-  new ResourceTemplate("issues://initiative/{initiativeId}", { list: undefined }),
-  { mimeType: "application/json" },
-  getInitiativeIssuesResource
+// Define issue labels resource
+server.tool(
+  "issue-labels",
+  GetIssueLabelsSchema.shape,
+  getIssueLabelsResource
 );
 
 // Define create issue tool
@@ -86,6 +64,86 @@ server.tool(
   "Create a new issue in Linear",
   CreateIssueSchema.shape,
   createIssueTool
+);
+
+// Define update issue tool
+server.tool(
+  "update_issue",
+  "Update an existing issue in Linear",
+  UpdateIssueSchema.shape,
+  updateIssueTool
+);
+
+// Define delete issue tool
+server.tool(
+  "delete_issue",
+  "Delete an existing issue in Linear",
+  DeleteIssueSchema.shape,
+  deleteIssueTool
+);
+
+// Define update issue labels tool
+server.tool(
+  "update_issue_labels",
+  "Update the labels of an existing issue in Linear",
+  UpdateIssueLabelsSchema.shape,
+  updateIssueLabelsTool
+);
+
+// Define update issue priority tool
+server.tool(
+  "update_issue_priority",
+  "Update the priority of an existing issue in Linear",
+  UpdateIssuePrioritySchema.shape,
+  updateIssuePriorityTool
+);
+
+// Define update issue estimate tool
+server.tool(
+  "update_issue_estimate",
+  "Update the estimate of an existing issue in Linear",
+  UpdateIssueEstimateSchema.shape,
+  updateIssueEstimateTool
+);
+
+// Define update issue state tool
+server.tool(
+  "update_issue_state",
+  "Update the state of an existing issue in Linear",
+  UpdateIssueStateSchema.shape,
+  updateIssueStateTool
+);
+
+// Define create comment tool
+server.tool(
+  "create_comment",
+  "Create a new comment in Linear",
+  CreateCommentSchema.shape,
+  createCommentTool
+);
+
+// Define update comment tool
+server.tool(
+  "update_comment",
+  "Update an existing comment in Linear",
+  UpdateCommentSchema.shape,
+  updateCommentTool
+);
+
+// Define delete comment tool
+server.tool(
+  "delete_comment",
+  "Delete an existing comment in Linear",
+  DeleteCommentSchema.shape,
+  deleteCommentTool
+);
+
+// Define get issue comments resource
+server.tool(
+  "get_issue_comments",
+  "Get comments for a specific issue in Linear",
+  GetIssueCommentsSchema.shape,
+  getIssueCommentsResource
 );
 
 async function runServer() {

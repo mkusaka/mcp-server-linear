@@ -1,27 +1,26 @@
 import { InvalidInputLinearError, LinearError } from "@linear/sdk";
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { GetViewerSchema } from "../schemas/issues.js";
 import { getLinearClient } from "../utils/linear.js";
 import { logger } from "../utils/logger.js";
-import { ReadResourceCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export const getViewerResource: ReadResourceCallback = async (uri) => {
+export const getViewerResource: ToolCallback<typeof GetViewerSchema.shape> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const viewer = await client.viewer;
     logger.info("Retrieved viewer info", { viewerId: viewer.id });
 
-    const teams = await viewer.teams();
-    const viewerData = {
-      id: viewer.id,
-      name: viewer.name,
-      email: viewer.email,
-      teamIds: teams.nodes.map((team) => team.id),
-    };
-
     return {
-      contents: [
+      content: [
         {
-          uri: uri.href,
-          text: JSON.stringify(viewerData, null, 2),
+          type: "text" as const,
+          text: JSON.stringify({
+            viewer: {
+              id: viewer.id,
+              name: viewer.name,
+              email: viewer.email,
+            },
+          }, null, 2),
           mimeType: "application/json"
         },
       ],
@@ -33,37 +32,37 @@ export const getViewerResource: ReadResourceCallback = async (uri) => {
 
     if (error instanceof InvalidInputLinearError) {
       return {
-        contents: [{
-          uri: uri.href,
+        content: [{
+          type: "text" as const,
           text: JSON.stringify({
             error: "Invalid input",
             message: error.message
           }, null, 2),
-          mimeType: "application/json"
-        }]
+        }],
+        isError: true
       };
     }
     if (error instanceof LinearError) {
       return {
-        contents: [{
-          uri: uri.href,
+        content: [{
+          type: "text" as const,
           text: JSON.stringify({
             error: "Linear API error",
             message: error.message
           }, null, 2),
-          mimeType: "application/json"
-        }]
+        }],
+        isError: true
       };
     }
     return {
-      contents: [{
-        uri: uri.href,
+      content: [{
+        type: "text" as const,
         text: JSON.stringify({
           error: "Unexpected error",
           message: error instanceof Error ? error.message : "Unknown error"
         }, null, 2),
-        mimeType: "application/json"
-      }]
+      }],
+      isError: true
     };
   }
 };
