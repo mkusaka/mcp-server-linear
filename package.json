@@ -1,5 +1,5 @@
 {
-  "name": "mcp-server-linear",
+  "name": "@mkusaka/mcp-server-linear",
   "version": "1.0.0",
   "description": "MCP server for using the Linear API",
   "type": "module",
@@ -15,7 +15,8 @@
     "watch": "tsc --watch",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "debug": "pnpm build && mcp-inspector dist/index.js"
+    "debug": "pnpm build && mcp-inspector dist/index.js",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "mcp",
