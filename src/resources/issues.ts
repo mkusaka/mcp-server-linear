@@ -8,7 +8,7 @@ import {
   GetProjectStatusesSchema,
   GetIssuePrioritiesSchema,
 } from "../schemas/issues.js";
-import { PaginationOrderBy } from "@linear/sdk/dist/_generated_documents.js";
+import { LinearDocument } from "@linear/sdk";
 
 export const getProjectIssuesResource: ToolCallback<
   typeof GetProjectIssuesSchema.shape
@@ -22,7 +22,7 @@ export const getProjectIssuesResource: ToolCallback<
           type: { nin: ["completed", "canceled"] },
         },
       },
-      orderBy: PaginationOrderBy.UpdatedAt,
+      orderBy: LinearDocument.PaginationOrderBy.UpdatedAt,
       first: 100,
     });
 
@@ -131,7 +131,7 @@ export const getIssueResource: ToolCallback<
       }
       const comments = await issue.comments({
         includeArchived: false,
-        orderBy: PaginationOrderBy.CreatedAt,
+        orderBy: LinearDocument.PaginationOrderBy.CreatedAt,
       });
       return await Promise.all(
         comments.nodes.map(async (comment) => ({

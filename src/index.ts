@@ -19,6 +19,7 @@ const server = new McpServer({
 // Define projects list resource
 server.tool(
   "projects",
+  "Get all projects in Linear",
   GetProjectsSchema.shape,
   getProjectsResource
 );
@@ -26,6 +27,7 @@ server.tool(
 // Define single project resource
 server.tool(
   "project",
+  "Get a single project in Linear",
   GetProjectSchema.shape,
   getProjectResource
 );
@@ -33,6 +35,7 @@ server.tool(
 // Define single issue resource
 server.tool(
   "issue",
+  "Get a single issue in Linear",
   GetIssueSchema.shape,
   getIssueResource
 );
@@ -40,6 +43,7 @@ server.tool(
 // Define project statuses resource
 server.tool(
   "project-statuses",
+  "Get all project statuses in Linear",
   GetProjectStatusesSchema.shape,
   getProjectStatusesResource
 );
@@ -47,6 +51,7 @@ server.tool(
 // Define project issues resource
 server.tool(
   "project-issues",
+  "Get all issues in a project in Linear",
   GetProjectIssuesSchema.shape,
   getProjectIssuesResource
 );
@@ -54,6 +59,7 @@ server.tool(
 // Define issue labels resource
 server.tool(
   "issue-labels",
+  "Get all issue labels in Linear",
   GetIssueLabelsSchema.shape,
   getIssueLabelsResource
 );

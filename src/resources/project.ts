@@ -13,6 +13,11 @@ export const getProjectsResource: ToolCallback<
   try {
     const projects = await client.projects({
       includeArchived: false,
+      filter: {
+        status: {
+          type: { nin: ["completed", "canceled"] },
+        }
+      }
     });
 
     return {
@@ -114,7 +119,15 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
           type: "resource" as const,
           resource: {
             uri: `projects://${args.projectId}`,
-            text: JSON.stringify(project, null, 2),
+            text: JSON.stringify({
+              project: {
+                id: project.id,
+                name: project.name,
+                description: project.description,
+                content: project.content,
+                state: project.state,
+              }
+            }, null, 2),
             mimeType: "application/json",
           },
         },
