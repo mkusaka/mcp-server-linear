@@ -18,6 +18,9 @@
     "debug": "pnpm build && mcp-inspector dist/index.js",
     "prepublishOnly": "pnpm build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "mcp",
     "linear",
