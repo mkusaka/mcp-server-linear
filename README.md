@@ -15,6 +15,21 @@ Key features:
 
 ## Installation
 
+### From npm package
+
+```bash
+# Install from npm
+npm install @mkusaka/mcp-server-linear
+
+# Or using yarn
+yarn add @mkusaka/mcp-server-linear
+
+# Or using pnpm
+pnpm add @mkusaka/mcp-server-linear
+```
+
+### From source
+
 ```bash
 # Clone the repository
 git clone https://github.com/mkusaka/mcp-server-linear.git
@@ -55,7 +70,120 @@ For development and testing, you can use the built-in inspector:
 npm run debug
 ```
 
-### Using with MCP Clients
+### Integration with MCP Tools
+
+#### Cline Integration
+
+[Cline](https://github.com/saoudrizwan/cline) is a VS Code extension that allows you to use MCP servers with Claude AI. To set up this MCP server with Cline:
+
+1. Open your Cline MCP settings file:
+   - macOS: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+   - Windows: `%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+   - Linux: `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+
+2. Add the Linear MCP server configuration:
+   ```json
+   {
+     "mcpServers": {
+       "linear": {
+         "command": "node",
+         "args": ["/path/to/mcp-server-linear/dist/index.js"],
+         "env": {
+           "LINEAR_API_KEY": "your_linear_api_key"
+         },
+         "disabled": false,
+         "autoApprove": []
+       }
+     }
+   }
+   ```
+
+   Alternatively, you can use npx to run the package directly:
+   ```json
+   {
+     "mcpServers": {
+       "linear": {
+         "command": "npx",
+         "args": ["-y", "@mkusaka/mcp-server-linear"],
+         "env": {
+           "LINEAR_API_KEY": "your_linear_api_key"
+         },
+         "disabled": false,
+         "autoApprove": []
+       }
+     }
+   }
+   ```
+
+#### Running with npx
+
+You can run the MCP server directly using npx without installing it globally:
+
+```bash
+LINEAR_API_KEY=your_api_key_here npx -y @mkusaka/mcp-server-linear
+```
+
+#### MCP Inspector
+
+For development and testing, you can use the MCP Inspector to interact with the server:
+
+1. Install the MCP Inspector globally:
+   ```bash
+   npm install -g @modelcontextprotocol/inspector
+   ```
+
+2. Run the server with the inspector:
+   ```bash
+   LINEAR_API_KEY=your_api_key_here mcp-inspector /path/to/mcp-server-linear/dist/index.js
+   ```
+
+   Or using npx:
+   ```bash
+   LINEAR_API_KEY=your_api_key_here npx -y @modelcontextprotocol/inspector @mkusaka/mcp-server-linear
+   ```
+
+#### Cursor Configuration
+
+Add the following to your Cursor configuration file (`~/.cursor/config.json`):
+
+```json
+{
+  "mcpServers": {
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "@mkusaka/mcp-server-linear"],
+      "env": {
+        "LINEAR_API_KEY": "your_linear_api_key"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+#### Anthropic Claude Integration
+
+You can use this MCP server with Anthropic Claude through compatible clients like Cline or directly through the Claude API with MCP support.
+
+#### Rule Configuration
+
+Add the following to your AI assistant's rules or prompt:
+
+```
+You have Linear MCP tools at your disposal. Follow these rules regarding Linear tool usage:
+1. ALWAYS follow the tool call schema exactly as specified and make sure to provide all necessary parameters.
+2. When I share a Linear URL (like https://linear.app/company/issue/ABC-123), automatically use the appropriate Linear tool to fetch information about that resource.
+3. **NEVER refer to tool names when speaking to me.** For example, instead of saying 'I need to use the Linear MCP tool to fetch this issue', just say 'I'll get the details of that issue for you'.
+4. Only use Linear tools when they are necessary. If my task is general or you already know the answer, just respond without calling tools.
+5. When I mention Linear issues, projects, or initiatives, use the appropriate tools to:
+   - Retrieve information about the mentioned resources
+   - Create new issues when requested
+   - Search for related issues or projects
+   - Provide context about Linear resources mentioned in our conversation
+```
+
+#### Other MCP Clients
 
 The server exposes various tools and resources over MCP that can be consumed by compatible clients:
 
