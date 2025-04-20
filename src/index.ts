@@ -35,6 +35,7 @@ import {
   UpdateIssueSchema,
   UpdateIssueStateSchema,
 } from "./schemas/issues.js";
+import { SearchIssuesSchema } from "./schemas/issueFilters.js";
 import {
   createCommentTool,
   deleteCommentTool,
@@ -50,6 +51,7 @@ import {
   updateIssueStateTool,
   updateIssueTool,
 } from "./tools/issues.js";
+import { searchIssuesTool } from "./tools/searchIssues.js";
 import { logger } from "./utils/logger.js";
 
 const server = new McpServer({
@@ -199,6 +201,14 @@ server.tool(
   "Get current user information including teams",
   GetViewerSchema.shape,
   getViewerResource,
+);
+
+// Define search issues tool
+server.tool(
+  "search_issues",
+  "Search for issues with advanced filtering options",
+  SearchIssuesSchema.shape,
+  searchIssuesTool
 );
 
 async function runServer() {
