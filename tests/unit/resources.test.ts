@@ -29,7 +29,7 @@ describe("Resource Handlers", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(typeof data).toBe("object");
-        // expect(contentItem.mimeType).toBe("application/json");
+        expect(contentItem.mimeType).toBe("application/json");
       }
     });
   });
@@ -54,7 +54,7 @@ describe("Resource Handlers", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(typeof data).toBe("object");
-        // expect(contentItem.mimeType).toBe("application/json");
+        expect(contentItem.mimeType).toBe("application/json");
       }
     });
   });
