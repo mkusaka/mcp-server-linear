@@ -301,21 +301,21 @@ Search for issues with advanced filtering options.
   filter?: {
     // Free text search across issue title and description
     search?: string;
-    
+
     // Filter by issue properties
     title?: { contains?: string, eq?: string, /* other string comparators */ };
     description?: { contains?: string, /* other string comparators */ };
     priority?: { eq?: number, gte?: number, /* other number comparators */ };
-    
+
     // Filter by related entities
     team?: { id?: { eq?: string }, name?: { eq?: string } };
     assignee?: { id?: { eq?: string }, name?: { eq?: string } };
     state?: { id?: { eq?: string }, name?: { eq?: string }, type?: { eq?: string } };
-    
+
     // Date filters
     createdAt?: { gt?: string, lt?: string, /* other date comparators */ };
     updatedAt?: { gt?: string, lt?: string, /* other date comparators */ };
-    
+
     // Logical operators
     and?: Array</* nested filter objects */>;
     or?: Array</* nested filter objects */>;
@@ -335,7 +335,7 @@ Example filters:
 {
   filter: {
     title: {
-      contains: "bug"
+      contains: "bug";
     }
   }
 }
@@ -346,17 +346,17 @@ Example filters:
     and: [
       {
         priority: {
-          gte: 3
-        }
+          gte: 3,
+        },
       },
       {
         assignee: {
           email: {
-            eq: "user@example.com"
-          }
-        }
-      }
-    ]
+            eq: "user@example.com",
+          },
+        },
+      },
+    ];
   }
 }
 
@@ -364,7 +364,7 @@ Example filters:
 {
   filter: {
     createdAt: {
-      gt: "2023-04-13T00:00:00Z" // Replace with dynamic date calculation
+      gt: "2023-04-13T00:00:00Z"; // Replace with dynamic date calculation
     }
   }
 }
