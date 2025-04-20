@@ -5,7 +5,7 @@ import { resetLinearClient } from '../../src/utils/linear.js';
 
 describe('Resource Handlers', () => {
   beforeEach(() => {
-    process.env.LINEAR_API_KEY = 'mock-api-key';
+    process.env.LINEAR_API_KEY = 'TEST_MODE';
     resetLinearClient();
   });
 
