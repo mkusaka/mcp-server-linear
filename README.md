@@ -19,13 +19,13 @@ Key features:
 
 ```bash
 # Install from npm
-npm install @U06CKH0PYQP/mcp-server-linear
+npm install @mkusaka/mcp-server-linear
 
 # Or using yarn
-yarn add @U06CKH0PYQP/mcp-server-linear
+yarn add @mkusaka/mcp-server-linear
 
 # Or using pnpm
-pnpm add @U06CKH0PYQP/mcp-server-linear
+pnpm add @mkusaka/mcp-server-linear
 ```
 
 ### From source
