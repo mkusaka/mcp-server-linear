@@ -4,13 +4,13 @@ export const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json()
+    winston.format.json(),
   ),
   transports: [
     // new winston.transports.Stream({
     //   stream: process.stderr,
     //   level: "info"
     // }),
-    new winston.transports.File({ filename: "linear-mcp.log", level: "info" })
+    new winston.transports.File({ filename: "linear-mcp.log", level: "info" }),
   ],
-}); 
+});

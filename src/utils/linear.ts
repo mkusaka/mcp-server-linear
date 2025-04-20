@@ -8,9 +8,9 @@ export function getLinearClient(): LinearClient {
     const apiKey = process.env.LINEAR_API_KEY;
     logger.info("Initializing Linear client", {
       hasApiKey: !!apiKey,
-      envKeys: Object.keys(process.env).filter(key => key.includes("LINEAR"))
+      envKeys: Object.keys(process.env).filter((key) => key.includes("LINEAR")),
     });
-    
+
     if (!apiKey) {
       throw new Error("LINEAR_API_KEY is not set in environment variables");
     }
@@ -22,4 +22,4 @@ export function getLinearClient(): LinearClient {
 // For testing purposes, reset the Linear client
 export function resetLinearClient(): void {
   client = null;
-} 
+}

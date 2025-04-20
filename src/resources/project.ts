@@ -1,7 +1,5 @@
 import { InvalidInputLinearError, LinearError } from "@linear/sdk";
-import {
-  ToolCallback,
-} from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { GetProjectSchema, GetProjectsSchema } from "../schemas/issues.js";
 import { getLinearClient } from "../utils/linear.js";
 import { logger } from "../utils/logger.js";
@@ -16,8 +14,8 @@ export const getProjectsResource: ToolCallback<
       filter: {
         status: {
           type: { nin: ["completed", "canceled"] },
-        }
-      }
+        },
+      },
     });
 
     return {
@@ -105,10 +103,9 @@ export const getProjectsResource: ToolCallback<
   }
 };
 
-export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = async (
-  args,
-  extra
-) => {
+export const getProjectResource: ToolCallback<
+  typeof GetProjectSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const project = await client.project(args.projectId as string);
@@ -119,15 +116,19 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
           type: "resource" as const,
           resource: {
             uri: `projects://${args.projectId}`,
-            text: JSON.stringify({
-              project: {
-                id: project.id,
-                name: project.name,
-                description: project.description,
-                content: project.content,
-                state: project.state,
-              }
-            }, null, 2),
+            text: JSON.stringify(
+              {
+                project: {
+                  id: project.id,
+                  name: project.name,
+                  description: project.description,
+                  content: project.content,
+                  state: project.state,
+                },
+              },
+              null,
+              2,
+            ),
             mimeType: "application/json",
           },
         },

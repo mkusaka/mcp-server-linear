@@ -5,4 +5,4 @@ export const ViewerSchema = z.object({
   name: z.string(),
   email: z.string(),
   teamIds: z.array(z.string()),
-}); 
+});
