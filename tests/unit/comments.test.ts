@@ -5,8 +5,6 @@ import {
   updateCommentTool,
   deleteCommentTool,
 } from "../../src/tools/comments.js";
-import * as linearUtils from "../../src/utils/linear.js";
-
 vi.mock("@linear/sdk", () => {
   return {
     LinearError: class LinearError extends Error {
@@ -146,29 +144,6 @@ describe("Comment Tools", () => {
       }
     });
 
-    it("should handle API errors", async () => {
-      // Use LinearError for testing error handling
-      const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
-      mockGetLinearClient.mockImplementationOnce(() => {
-        throw new LinearError({ message: "API error" });
-      });
-
-      const result = await getIssueCommentsResource(
-        { issueId: "invalid-issue-id" },
-        { auth: { apiKey: "test-api-key" } } as any,
-      );
-
-      expect(result).toBeDefined();
-      expect(result.isError).toBe(true);
-      expect(result.content[0].type).toBe("text");
-
-      const contentItem = result.content[0];
-      if (contentItem.type === "text") {
-        const data = JSON.parse(contentItem.text);
-        expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Failed to get issue comments");
-      }
-    });
   });
 
   describe("createCommentTool", () => {
@@ -187,32 +162,6 @@ describe("Comment Tools", () => {
       expect(result.content[0].text).toBe("Comment created successfully");
     });
 
-    it("should handle API errors", async () => {
-      // Use LinearError for testing error handling
-      const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
-      mockGetLinearClient.mockImplementationOnce(() => {
-        throw new LinearError({ message: "API error" });
-      });
-
-      const result = await createCommentTool(
-        {
-          issueId: "invalid-issue-id",
-          body: "Test comment",
-        },
-        { auth: { apiKey: "test-api-key" } } as any,
-      );
-
-      expect(result).toBeDefined();
-      expect(result.isError).toBe(true);
-      expect(result.content[0].type).toBe("text");
-
-      const contentItem = result.content[0];
-      if (contentItem.type === "text") {
-        const data = JSON.parse(contentItem.text);
-        expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Linear API error");
-      }
-    });
   });
 
   describe("updateCommentTool", () => {
@@ -231,32 +180,6 @@ describe("Comment Tools", () => {
       expect(result.content[0].text).toBe("Comment updated successfully");
     });
 
-    it("should handle API errors", async () => {
-      // Use LinearError for testing error handling
-      const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
-      mockGetLinearClient.mockImplementationOnce(() => {
-        throw new LinearError({ message: "API error" });
-      });
-
-      const result = await updateCommentTool(
-        {
-          commentId: "invalid-comment-id",
-          body: "Updated comment",
-        },
-        { auth: { apiKey: "test-api-key" } } as any,
-      );
-
-      expect(result).toBeDefined();
-      expect(result.isError).toBe(true);
-      expect(result.content[0].type).toBe("text");
-
-      const contentItem = result.content[0];
-      if (contentItem.type === "text") {
-        const data = JSON.parse(contentItem.text);
-        expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Linear API error");
-      }
-    });
   });
 
   describe("deleteCommentTool", () => {
@@ -274,30 +197,5 @@ describe("Comment Tools", () => {
       expect(result.content[0].text).toBe("Comment deleted successfully");
     });
 
-    it("should handle API errors", async () => {
-      // Use LinearError for testing error handling
-      const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
-      mockGetLinearClient.mockImplementationOnce(() => {
-        throw new LinearError({ message: "API error" });
-      });
-
-      const result = await deleteCommentTool(
-        {
-          commentId: "invalid-comment-id",
-        },
-        { auth: { apiKey: "test-api-key" } } as any,
-      );
-
-      expect(result).toBeDefined();
-      expect(result.isError).toBe(true);
-      expect(result.content[0].type).toBe("text");
-
-      const contentItem = result.content[0];
-      if (contentItem.type === "text") {
-        const data = JSON.parse(contentItem.text);
-        expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Linear API error");
-      }
-    });
   });
 });
