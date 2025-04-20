@@ -166,18 +166,21 @@ Add the following to your Cursor configuration file (`~/.cursor/config.json`):
 
 You can use this MCP server with Anthropic Claude through compatible clients like Cline or directly through the Claude API with MCP support.
 
-#### Prompt Examples
+#### Rule Configuration
 
-When using this MCP server with AI assistants, you can include the following prompt examples to help the AI use the Linear tools effectively:
+Add the following to your AI assistant's rules or prompt:
 
 ```
-When I mention Linear issues, projects, or initiatives, or share Linear URLs, you should use the Linear MCP tools to:
-1. Retrieve information about the mentioned Linear resources
-2. Create new issues when requested
-3. Search for related issues or projects
-4. Provide context about Linear resources mentioned in our conversation
-
-For example, if I share a Linear issue URL like "https://linear.app/company/issue/ABC-123", you should use the Linear MCP tools to fetch and display information about that issue.
+You have Linear MCP tools at your disposal. Follow these rules regarding Linear tool usage:
+1. ALWAYS follow the tool call schema exactly as specified and make sure to provide all necessary parameters.
+2. When I share a Linear URL (like https://linear.app/company/issue/ABC-123), automatically use the appropriate Linear tool to fetch information about that resource.
+3. **NEVER refer to tool names when speaking to me.** For example, instead of saying 'I need to use the Linear MCP tool to fetch this issue', just say 'I'll get the details of that issue for you'.
+4. Only use Linear tools when they are necessary. If my task is general or you already know the answer, just respond without calling tools.
+5. When I mention Linear issues, projects, or initiatives, use the appropriate tools to:
+   - Retrieve information about the mentioned resources
+   - Create new issues when requested
+   - Search for related issues or projects
+   - Provide context about Linear resources mentioned in our conversation
 ```
 
 #### Other MCP Clients
