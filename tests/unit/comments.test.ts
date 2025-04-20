@@ -13,30 +13,32 @@ vi.mock("../../src/utils/linear.js", () => {
     issue: vi.fn((issueId) => {
       if (issueId === "mock-issue-id") {
         return Promise.resolve({
-          comments: vi.fn(() => Promise.resolve({
-            nodes: [
-              {
-                id: "mock-comment-id-1",
-                body: "Mock comment 1",
-                createdAt: "2023-01-01T00:00:00Z",
-                updatedAt: "2023-01-01T00:00:00Z",
-                user: {
-                  id: "mock-user-id",
-                  name: "Mock User",
+          comments: vi.fn(() =>
+            Promise.resolve({
+              nodes: [
+                {
+                  id: "mock-comment-id-1",
+                  body: "Mock comment 1",
+                  createdAt: "2023-01-01T00:00:00Z",
+                  updatedAt: "2023-01-01T00:00:00Z",
+                  user: {
+                    id: "mock-user-id",
+                    name: "Mock User",
+                  },
                 },
-              },
-              {
-                id: "mock-comment-id-2",
-                body: "Mock comment 2",
-                createdAt: "2023-01-02T00:00:00Z",
-                updatedAt: "2023-01-02T00:00:00Z",
-                user: {
-                  id: "mock-user-id",
-                  name: "Mock User",
+                {
+                  id: "mock-comment-id-2",
+                  body: "Mock comment 2",
+                  createdAt: "2023-01-02T00:00:00Z",
+                  updatedAt: "2023-01-02T00:00:00Z",
+                  user: {
+                    id: "mock-user-id",
+                    name: "Mock User",
+                  },
                 },
-              },
-            ],
-          })),
+              ],
+            }),
+          ),
         });
       }
       throw new Error("Issue not found");
@@ -109,7 +111,7 @@ describe("Comment Tools", () => {
     it("should return issue comments", async () => {
       const result = await getIssueCommentsResource(
         { issueId: "mock-issue-id" },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -134,7 +136,7 @@ describe("Comment Tools", () => {
 
       const result = await getIssueCommentsResource(
         { issueId: "invalid-issue-id" },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -157,7 +159,7 @@ describe("Comment Tools", () => {
           issueId: "mock-issue-id",
           body: "Test comment",
         },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -178,7 +180,7 @@ describe("Comment Tools", () => {
           issueId: "invalid-issue-id",
           body: "Test comment",
         },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -201,7 +203,7 @@ describe("Comment Tools", () => {
           commentId: "mock-comment-id",
           body: "Updated comment",
         },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -222,7 +224,7 @@ describe("Comment Tools", () => {
           commentId: "invalid-comment-id",
           body: "Updated comment",
         },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -244,7 +246,7 @@ describe("Comment Tools", () => {
         {
           commentId: "mock-comment-id",
         },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();
@@ -264,7 +266,7 @@ describe("Comment Tools", () => {
         {
           commentId: "invalid-comment-id",
         },
-        { auth: { apiKey: "test-api-key" } } as any
+        { auth: { apiKey: "test-api-key" } } as any,
       );
 
       expect(result).toBeDefined();

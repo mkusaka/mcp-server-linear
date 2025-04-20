@@ -7,7 +7,7 @@ vi.mock("@linear/sdk", () => {
   return {
     LinearError: class LinearError extends Error {
       constructor(options) {
-        super(typeof options === 'object' ? options.message : options);
+        super(typeof options === "object" ? options.message : options);
         this.name = "LinearError";
       }
     },
@@ -16,7 +16,7 @@ vi.mock("@linear/sdk", () => {
         super(message);
         this.name = "InvalidInputLinearError";
       }
-    }
+    },
   };
 });
 
@@ -38,7 +38,7 @@ describe("Viewer Resource Handlers with Spy", () => {
         getLinearClient: vi.fn().mockImplementation(() => ({
           get viewer() {
             throw new LinearError({ message: "API error" });
-          }
+          },
         })),
         resetLinearClient: vi.fn(),
       }));
