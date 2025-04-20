@@ -113,7 +113,7 @@ npm run debug
          "args": ["/path/to/mcp-server-linear/dist/index.js"],
          "env": {
            "LINEAR_API_KEY": "your_linear_api_key"
-           // または OAuth認証を使用する場合
+           // or when using OAuth authentication
            // "LINEAR_OAUTH_CLIENT_ID": "your_oauth_client_id",
            // "LINEAR_OAUTH_CLIENT_SECRET": "your_oauth_client_secret"
          },
@@ -184,7 +184,7 @@ Add the following to your Cursor configuration file (`~/.cursor/config.json`):
       "args": ["-y", "@mkusaka/mcp-server-linear"],
       "env": {
         "LINEAR_API_KEY": "your_linear_api_key"
-        // または OAuth認証を使用する場合
+        // or when using OAuth authentication
         // "LINEAR_OAUTH_CLIENT_ID": "your_oauth_client_id",
         // "LINEAR_OAUTH_CLIENT_SECRET": "your_oauth_client_secret"
       },
