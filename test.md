@@ -27,14 +27,14 @@ MSW is particularly well-suited for GraphQL APIs as it allows us to:
 The test setup is defined in `tests/setup.ts`:
 
 ```typescript
-import { beforeAll, afterAll, afterEach } from 'vitest';
-import { setupServer } from 'msw/node';
-import { handlers } from './mocks/handlers';
+import { beforeAll, afterAll, afterEach } from "vitest";
+import { setupServer } from "msw/node";
+import { handlers } from "./mocks/handlers";
 
 const server = setupServer(...handlers);
 
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'error' });
+  server.listen({ onUnhandledRequest: "error" });
 });
 
 afterAll(() => {
@@ -47,6 +47,7 @@ afterEach(() => {
 ```
 
 This configuration:
+
 1. Creates an MSW server with our defined handlers
 2. Starts the server before all tests
 3. Closes the server after all tests
@@ -57,51 +58,56 @@ This configuration:
 The mock handlers in `tests/mocks/handlers.ts` define how MSW should respond to different GraphQL operations. Here's how we leverage MSW's GraphQL support:
 
 ```typescript
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse } from "msw";
 
 export const handlers = [
   // Handle GET requests to the GraphQL endpoint
-  http.get('https://api.linear.app/graphql', () => {
-    return HttpResponse.json({ data: { viewer: { id: 'mock-user-id', name: 'Mock User' } } });
+  http.get("https://api.linear.app/graphql", () => {
+    return HttpResponse.json({
+      data: { viewer: { id: "mock-user-id", name: "Mock User" } },
+    });
   }),
 
   // Handle POST requests to the GraphQL endpoint (most operations)
-  http.post('https://api.linear.app/graphql', async ({ request }) => {
+  http.post("https://api.linear.app/graphql", async ({ request }) => {
     const body = await request.json();
-    const { query, variables } = body as { query: string; variables: Record<string, any> };
+    const { query, variables } = body as {
+      query: string;
+      variables: Record<string, any>;
+    };
 
     // Check the GraphQL query to determine the appropriate response
-    if (query.includes('project(id:')) {
+    if (query.includes("project(id:")) {
       return HttpResponse.json({
         data: {
           project: {
-            id: variables.id || 'mock-project-id',
-            name: 'Mock Project',
-            description: 'Mock Project Description',
-            state: 'started',
+            id: variables.id || "mock-project-id",
+            name: "Mock Project",
+            description: "Mock Project Description",
+            state: "started",
             issues: {
               nodes: [
                 {
-                  id: 'mock-issue-1',
-                  title: 'Mock Issue 1',
-                  description: 'Mock Issue 1 Description',
-                  state: { name: 'Todo' },
+                  id: "mock-issue-1",
+                  title: "Mock Issue 1",
+                  description: "Mock Issue 1 Description",
+                  state: { name: "Todo" },
                 },
                 {
-                  id: 'mock-issue-2',
-                  title: 'Mock Issue 2',
-                  description: 'Mock Issue 2 Description',
-                  state: { name: 'In Progress' },
-                }
-              ]
-            }
-          }
-        }
+                  id: "mock-issue-2",
+                  title: "Mock Issue 2",
+                  description: "Mock Issue 2 Description",
+                  state: { name: "In Progress" },
+                },
+              ],
+            },
+          },
+        },
       });
     }
 
     // Handle other GraphQL operations...
-  })
+  }),
 ];
 ```
 
@@ -110,40 +116,40 @@ export const handlers = [
 For more complex applications, MSW provides a dedicated GraphQL API that can be used instead of the HTTP API:
 
 ```typescript
-import { graphql } from 'msw';
+import { graphql } from "msw";
 
 export const handlers = [
-  graphql.query('GetProject', (req, res, ctx) => {
+  graphql.query("GetProject", (req, res, ctx) => {
     const { id } = req.variables;
-    
+
     return res(
       ctx.data({
         project: {
-          id: id || 'mock-project-id',
-          name: 'Mock Project',
+          id: id || "mock-project-id",
+          name: "Mock Project",
           // ...other fields
-        }
-      })
+        },
+      }),
     );
   }),
-  
-  graphql.mutation('CreateIssue', (req, res, ctx) => {
+
+  graphql.mutation("CreateIssue", (req, res, ctx) => {
     const { input } = req.variables;
-    
+
     return res(
       ctx.data({
         issueCreate: {
           success: true,
           issue: {
-            id: 'new-mock-issue-id',
+            id: "new-mock-issue-id",
             title: input.title,
             description: input.description,
             // ...other fields
-          }
-        }
-      })
+          },
+        },
+      }),
     );
-  })
+  }),
 ];
 ```
 
@@ -154,34 +160,40 @@ This approach allows for more precise matching of GraphQL operations by operatio
 Resource handlers are responsible for retrieving data from Linear. Here's an example of how we test them:
 
 ```typescript
-import { describe, it, expect, beforeEach } from 'vitest';
-import { getProjectIssuesResource, getIssueResource } from '../../src/resources/issues.js';
-import { resetLinearClient } from '../../src/utils/linear.js';
+import { describe, it, expect, beforeEach } from "vitest";
+import {
+  getProjectIssuesResource,
+  getIssueResource,
+} from "../../src/resources/issues.js";
+import { resetLinearClient } from "../../src/utils/linear.js";
 
-describe('Resource Handlers', () => {
+describe("Resource Handlers", () => {
   beforeEach(() => {
-    process.env.LINEAR_API_KEY = 'TEST_MODE';
+    process.env.LINEAR_API_KEY = "TEST_MODE";
     resetLinearClient();
   });
 
-  describe('getProjectIssuesResource', () => {
-    it('should return project issues', async () => {
-      const result = await getProjectIssuesResource({
-        projectId: 'mock-project-id'
-      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
+  describe("getProjectIssuesResource", () => {
+    it("should return project issues", async () => {
+      const result = await getProjectIssuesResource(
+        {
+          projectId: "mock-project-id",
+        },
+        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
+      );
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
-      expect(result.content[0].type).toBe('text');
-      
+      expect(result.content[0].type).toBe("text");
+
       const contentItem = result.content[0];
-      if (contentItem.type === 'text') {
+      if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
-        expect(typeof data).toBe('object');
-      } else if (contentItem.type === 'resource') {
+        expect(typeof data).toBe("object");
+      } else if (contentItem.type === "resource") {
         const resource = contentItem.resource;
-        expect(resource.uri).toBe('issues://projects/mock-project-id/issues');
-        expect(typeof resource.text).toBe('string');
+        expect(resource.uri).toBe("issues://projects/mock-project-id/issues");
+        expect(typeof resource.text).toBe("string");
       }
     });
   });
@@ -195,31 +207,38 @@ describe('Resource Handlers', () => {
 Tool handlers are responsible for performing actions in Linear, such as creating or updating issues. Here's how we test them:
 
 ```typescript
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createIssueTool, updateIssueTool, deleteIssueTool } from '../../src/tools/issues.js';
-import { resetLinearClient } from '../../src/utils/linear.js';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import {
+  createIssueTool,
+  updateIssueTool,
+  deleteIssueTool,
+} from "../../src/tools/issues.js";
+import { resetLinearClient } from "../../src/utils/linear.js";
 
-describe('Tool Handlers', () => {
+describe("Tool Handlers", () => {
   beforeEach(() => {
-    process.env.LINEAR_API_KEY = 'TEST_MODE';
+    process.env.LINEAR_API_KEY = "TEST_MODE";
     resetLinearClient();
-    
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  describe('createIssueTool', () => {
-    it('should attempt to create a new issue', async () => {
-      const result = await createIssueTool({
-        title: 'Test Issue',
-        description: 'Test Description',
-        teamId: 'test-team-id'
-      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
+  describe("createIssueTool", () => {
+    it("should attempt to create a new issue", async () => {
+      const result = await createIssueTool(
+        {
+          title: "Test Issue",
+          description: "Test Description",
+          teamId: "test-team-id",
+        },
+        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
+      );
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
-      expect(result.content[0].type).toBe('text');
-      
-      expect(typeof result.content[0].text).toBe('string');
+      expect(result.content[0].type).toBe("text");
+
+      expect(typeof result.content[0].text).toBe("string");
     });
   });
 
@@ -235,10 +254,10 @@ Never include actual API keys or tokens in test files. Use environment variables
 
 ```typescript
 // Good
-process.env.LINEAR_API_KEY = 'TEST_MODE';
+process.env.LINEAR_API_KEY = "TEST_MODE";
 
 // Bad
-process.env.LINEAR_API_KEY = 'actual-api-key-here';
+process.env.LINEAR_API_KEY = "actual-api-key-here";
 ```
 
 ### 2. Test Structure
@@ -263,21 +282,24 @@ Ensure mock responses match the structure of actual Linear API responses:
 Test both success and error scenarios:
 
 ```typescript
-it('should handle API errors gracefully', async () => {
+it("should handle API errors gracefully", async () => {
   // Setup MSW to return an error for this specific test
   server.use(
-    http.post('https://api.linear.app/graphql', () => {
-      return HttpResponse.json({
-        errors: [{ message: 'Something went wrong' }]
-      }, { status: 200 });
-    })
+    http.post("https://api.linear.app/graphql", () => {
+      return HttpResponse.json(
+        {
+          errors: [{ message: "Something went wrong" }],
+        },
+        { status: 200 },
+      );
+    }),
   );
 
   // Test that the handler properly handles the error
   const result = await someHandler(params, context);
-  
+
   expect(result.error).toBeDefined();
-  expect(result.error.message).toContain('Something went wrong');
+  expect(result.error.message).toContain("Something went wrong");
 });
 ```
 
@@ -293,13 +315,13 @@ it('should handle API errors gracefully', async () => {
 Tests can be run using the following command:
 
 ```bash
-npm test
+pnpm test
 ```
 
 For watching mode during development:
 
 ```bash
-npm test -- --watch
+pnpm test -- --watch
 ```
 
 ## Conclusion
