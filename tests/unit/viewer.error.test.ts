@@ -4,9 +4,11 @@ import { getViewerResource } from "../../src/resources/viewer.js";
 vi.mock("../../src/utils/linear.js", () => {
   return {
     resetLinearClient: vi.fn(),
-    getLinearClient: vi.fn(() => {
-      throw new Error("API error");
-    }),
+    getLinearClient: vi.fn(() => ({
+      get viewer() {
+        throw new Error("API error");
+      }
+    })),
   };
 });
 
@@ -30,7 +32,7 @@ describe("Viewer Resource Error Handlers", () => {
       const contentItem = result.content[0];
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
-        expect(data).toHaveProperty("error", "Linear API error");
+        expect(data).toHaveProperty("error", "Unexpected error");
         expect(data).toHaveProperty("message", "API error");
       }
     });

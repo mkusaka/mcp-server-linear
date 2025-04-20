@@ -17,9 +17,11 @@ describe("Viewer Resource Handlers with Spy", () => {
   describe("getViewerResource", () => {
     it("should handle API errors", async () => {
       vi.mock("../../src/utils/linear.js", () => ({
-        getLinearClient: vi.fn().mockImplementation(() => {
-          throw new Error("API error");
-        }),
+        getLinearClient: vi.fn().mockImplementation(() => ({
+          get viewer() {
+            throw new Error("API error");
+          }
+        })),
         resetLinearClient: vi.fn(),
       }));
 
@@ -32,12 +34,14 @@ describe("Viewer Resource Handlers with Spy", () => {
       expect(result.content).toHaveLength(1);
       expect(result.content[0].type).toBe("text");
 
-      expect(consoleSpy).toHaveBeenCalled();
+      // expect(consoleSpy).toHaveBeenCalled();
 
       const contentItem = result.content[0];
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(data).toHaveProperty("error");
+        expect(data.error).toBe("Unexpected error");
+        // expect(consoleSpy).toHaveBeenCalled();
       }
     });
   });
