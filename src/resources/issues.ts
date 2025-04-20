@@ -125,9 +125,9 @@ export const getIssueResource: ToolCallback<
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId as string);
-    
+
     const stateData = await issue.state;
-    
+
     let comments: {
       id: string;
       body: string;
@@ -145,13 +145,15 @@ export const getIssueResource: ToolCallback<
           return {
             id: comment.id,
             body: comment.body,
-            user: user ? {
-              id: user.id,
-              name: user.name,
-            } : null,
+            user: user
+              ? {
+                  id: user.id,
+                  name: user.name,
+                }
+              : null,
             createdAt: comment.createdAt,
           };
-        })
+        }),
       );
     }
 
@@ -178,7 +180,7 @@ export const getIssueResource: ToolCallback<
               name: childState,
             },
           };
-        })
+        }),
       );
     }
 
@@ -198,7 +200,7 @@ export const getIssueResource: ToolCallback<
         };
       }
     }
-    
+
     const labelsData = await issue.labels();
     const labels = labelsData.nodes.map((label) => ({
       id: label.id,
