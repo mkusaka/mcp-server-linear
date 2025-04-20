@@ -1,6 +1,6 @@
 {
   "name": "@mkusaka/mcp-server-linear",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "MCP server for using the Linear API",
   "type": "module",
   "main": "dist/index.js",
