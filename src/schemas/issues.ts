@@ -57,9 +57,9 @@ export const GetIssueSchema = z.object({
 
 export const GetViewerSchema = z.object({});
 
-export const GetProjectStatusesSchema = z
+export const GetIssueStatusListSchema = z
   .object({})
-  .describe("get project statuses which are linked to the project");
+  .describe("get issue attachable status list");
 
 export const GetIssuePrioritiesSchema = z
   .object({})
