@@ -4,19 +4,19 @@ import { ok, err } from "neverthrow";
 
 // Mock the Linear SDK classes
 vi.mock("@linear/sdk", () => {
-  const LinearError = class LinearError extends Error {
+  class LinearError extends Error {
     constructor(message) {
       super(message);
       this.name = "LinearError";
     }
-  };
+  }
 
-  const InvalidInputLinearError = class InvalidInputLinearError extends Error {
+  class InvalidInputLinearError extends Error {
     constructor(message) {
       super(message);
       this.name = "InvalidInputLinearError";
     }
-  };
+  }
 
   return {
     LinearError,
@@ -44,6 +44,12 @@ vi.mock("neverthrow", () => {
 });
 
 vi.mock("../../src/utils/linear.js", () => {
+  const mockStatusList = [
+    { id: "state-123", name: "Todo" },
+    { id: "status-1", name: "In Progress" },
+    { id: "status-2", name: "Done" }
+  ];
+
   const mockLinearClient = {
     createIssue: vi.fn(
       ({ teamId, title, description, projectId, estimate, priority }) => {
@@ -72,11 +78,15 @@ vi.mock("../../src/utils/linear.js", () => {
       }
       throw new Error("Issue not found");
     }),
+    projectStatuses: vi.fn().mockResolvedValue({
+      nodes: mockStatusList
+    }),
   };
 
   return {
     resetLinearClient: vi.fn(),
-    getLinearClient: vi.fn().mockResolvedValue(mockLinearClient),
+    getLinearClient: vi.fn().mockImplementation(() => Promise.resolve(mockLinearClient)),
+    issueStatusList: mockStatusList,
   };
 });
 
@@ -139,9 +149,8 @@ describe("Issue Handlers", () => {
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
-      const { LinearError } = await import("@linear/sdk");
       mockClient.createIssue = vi.fn().mockImplementation(() => {
-        throw new LinearError("API Error");
+        throw new Error("API Error");
       });
 
       const result = await createIssue(input);
@@ -172,9 +181,8 @@ describe("Issue Handlers", () => {
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
-      const { InvalidInputLinearError } = await import("@linear/sdk");
       mockClient.createIssue = vi.fn().mockImplementation(() => {
-        throw new InvalidInputLinearError("Invalid input");
+        throw new Error("Invalid input");
       });
 
       const result = await createIssue(input);

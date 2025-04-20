@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   CreateIssueSchema,
   GetProjectSchema,
@@ -11,6 +11,18 @@ import {
   UpdateIssueEstimateSchema,
   UpdateIssueStateSchema,
 } from "../../src/schemas/issues.js";
+
+vi.mock("../../src/utils/linear.js", () => {
+  const mockStatusList = [
+    { id: "state-123", name: "Todo" },
+    { id: "status-1", name: "In Progress" },
+    { id: "status-2", name: "Done" }
+  ];
+  
+  return {
+    issueStatusList: mockStatusList,
+  };
+});
 
 describe("Issue Schemas", () => {
   describe("CreateIssueSchema", () => {
