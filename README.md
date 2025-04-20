@@ -12,6 +12,7 @@ Key features:
 - Create, update, and delete issues
 - Create, update, and delete comments
 - Manage issue labels, priority, estimates, and states
+- Advanced issue searching with flexible filtering options
 - Consistent error handling and response formats
 
 ## Installation
@@ -205,6 +206,7 @@ Issue Management:
 - `update_issue_priority` - Update the priority of an issue
 - `update_issue_estimate` - Update the estimate of an issue
 - `update_issue_state` - Update the state of an issue
+- `search_issues` - Search for issues with advanced filtering options
 
 Comment Management:
 
@@ -286,6 +288,85 @@ Delete an existing issue in Linear.
 // Tool name: delete_issue
 {
   issueId: string; // Target issue ID (required)
+}
+```
+
+#### Search Issues
+
+Search for issues with advanced filtering options.
+
+```typescript
+// Tool name: search_issues
+{
+  filter?: {
+    // Free text search across issue title and description
+    search?: string;
+    
+    // Filter by issue properties
+    title?: { contains?: string, eq?: string, /* other string comparators */ };
+    description?: { contains?: string, /* other string comparators */ };
+    priority?: { eq?: number, gte?: number, /* other number comparators */ };
+    
+    // Filter by related entities
+    team?: { id?: { eq?: string }, name?: { eq?: string } };
+    assignee?: { id?: { eq?: string }, name?: { eq?: string } };
+    state?: { id?: { eq?: string }, name?: { eq?: string }, type?: { eq?: string } };
+    
+    // Date filters
+    createdAt?: { gt?: string, lt?: string, /* other date comparators */ };
+    updatedAt?: { gt?: string, lt?: string, /* other date comparators */ };
+    
+    // Logical operators
+    and?: Array</* nested filter objects */>;
+    or?: Array</* nested filter objects */>;
+    not?: /* nested filter object */;
+  };
+  first?: number; // Number of issues to return (default: 50)
+  after?: string; // Cursor for pagination
+  orderBy?: "createdAt" | "updatedAt" | "priority" | "title"; // Field to order results by (default: "updatedAt")
+  orderDirection?: "ASC" | "DESC"; // Direction to order results (default: "DESC")
+}
+```
+
+Example filters:
+
+```typescript
+// Search for issues with "bug" in the title
+{
+  filter: {
+    title: {
+      contains: "bug"
+    }
+  }
+}
+
+// Search for high priority issues assigned to a specific user
+{
+  filter: {
+    and: [
+      {
+        priority: {
+          gte: 3
+        }
+      },
+      {
+        assignee: {
+          email: {
+            eq: "user@example.com"
+          }
+        }
+      }
+    ]
+  }
+}
+
+// Search for issues created in the last 7 days
+{
+  filter: {
+    createdAt: {
+      gt: "2023-04-13T00:00:00Z" // Replace with dynamic date calculation
+    }
+  }
 }
 ```
 
