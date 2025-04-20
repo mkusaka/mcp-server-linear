@@ -77,7 +77,7 @@ vi.mock("commander", () => {
       logFile: "test.log",
     }),
   };
-  
+
   return {
     Command: vi.fn().mockImplementation(() => mockCommand),
   };
@@ -94,45 +94,52 @@ describe("Server Initialization", () => {
 
   it("should initialize the MCP server with all tools", async () => {
     await import("../../src/index.js");
-    
+
     expect(McpServer).toHaveBeenCalledWith({
       name: "linear-mcp-server",
       version: "1.0.0",
     });
-    
+
     const mockServer = (McpServer as any).mock.results[0].value;
-    
+
     expect(mockServer.tool).toHaveBeenCalledTimes(19);
-    
+
     expect(StdioServerTransport).toHaveBeenCalled();
-    
+
     expect(mockServer.connect).toHaveBeenCalledWith(expect.any(Object));
   });
 
   it("should handle errors during server startup", async () => {
-    const mockConnect = vi.fn().mockRejectedValue(new Error("Connection error"));
-    vi.mocked(McpServer).mockImplementation(() => ({
-      tool: vi.fn(),
-      connect: mockConnect,
-      server: {} as any,
-      _registeredResources: {} as any,
-      _registeredResourceTemplates: {} as any,
-      _registeredTools: {} as any,
-    } as any));
-    
-    const mockExit = vi.spyOn(process, "exit").mockImplementation((() => {}) as any);
-    
+    const mockConnect = vi
+      .fn()
+      .mockRejectedValue(new Error("Connection error"));
+    vi.mocked(McpServer).mockImplementation(
+      () =>
+        ({
+          tool: vi.fn(),
+          connect: mockConnect,
+          server: {} as any,
+          _registeredResources: {} as any,
+          _registeredResourceTemplates: {} as any,
+          _registeredTools: {} as any,
+        }) as any,
+    );
+
+    const mockExit = vi
+      .spyOn(process, "exit")
+      .mockImplementation((() => {}) as any);
+
     await import("../../src/index.js");
-    
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     const { logger } = await import("../../src/utils/logger.js");
     expect(logger.error).toHaveBeenCalledWith(
       "Fatal error in main():",
-      expect.any(Error)
+      expect.any(Error),
     );
     expect(mockExit).toHaveBeenCalledWith(1);
-    
+
     mockExit.mockRestore();
   });
 });

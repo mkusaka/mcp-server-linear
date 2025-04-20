@@ -34,8 +34,12 @@ describe("Issue Schemas", () => {
       const result = CreateIssueSchema.safeParse(invalidInput);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors.some(e => e.path.includes("title"))).toBe(true);
-        expect(result.error.errors.some(e => e.path.includes("teamId"))).toBe(true);
+        expect(result.error.errors.some((e) => e.path.includes("title"))).toBe(
+          true,
+        );
+        expect(result.error.errors.some((e) => e.path.includes("teamId"))).toBe(
+          true,
+        );
       }
     });
 
@@ -67,7 +71,9 @@ describe("Issue Schemas", () => {
       const result = CreateIssueSchema.safeParse(invalidInput);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors.some(e => e.path.includes("priority"))).toBe(true);
+        expect(
+          result.error.errors.some((e) => e.path.includes("priority")),
+        ).toBe(true);
       }
     });
   });

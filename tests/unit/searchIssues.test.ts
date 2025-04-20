@@ -132,7 +132,7 @@ describe("Search Issues Tool", () => {
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
       expect(result.content[0].type).toBe("text");
-      
+
       const data = JSON.parse(result.content[0].text);
       expect(data).toHaveProperty("issues");
       expect(data.issues.nodes).toHaveLength(2);
@@ -141,7 +141,7 @@ describe("Search Issues Tool", () => {
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
-      
+
       expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
         expect.stringContaining("query SearchIssues"),
         expect.objectContaining({
@@ -149,7 +149,7 @@ describe("Search Issues Tool", () => {
           first: 50,
           orderBy: "updatedAt",
           orderDirection: "DESC",
-        })
+        }),
       );
     });
 
@@ -163,10 +163,10 @@ describe("Search Issues Tool", () => {
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
-      
+
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
-      
+
       expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
         expect.stringContaining("query SearchIssues"),
         expect.objectContaining({
@@ -174,20 +174,20 @@ describe("Search Issues Tool", () => {
           first: 10,
           orderBy: "createdAt",
           orderDirection: "DESC",
-        })
+        }),
       );
 
       expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
         expect.stringContaining("issues("),
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
         expect.stringContaining("filter: $filter"),
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
         expect.stringContaining("first: $first"),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
@@ -201,15 +201,15 @@ describe("Search Issues Tool", () => {
       });
 
       expect(result).toBeDefined();
-      
+
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
-      
+
       expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
           after: "cursor-123",
-        })
+        }),
       );
     });
 
@@ -217,7 +217,9 @@ describe("Search Issues Tool", () => {
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClientPromise = getLinearClient();
       const mockClient = await mockClientPromise;
-      mockClient.client.rawRequest = vi.fn().mockRejectedValue(new Error("API Error"));
+      mockClient.client.rawRequest = vi
+        .fn()
+        .mockRejectedValue(new Error("API Error"));
 
       const result = await searchIssuesTool({
         filter: {},
@@ -229,11 +231,16 @@ describe("Search Issues Tool", () => {
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
       expect(result.content[0].type).toBe("text");
-      expect(result.content[0].text).toContain("Error searching issues: API Error");
+      expect(result.content[0].text).toContain(
+        "Error searching issues: API Error",
+      );
       expect(result.isError).toBe(true);
 
       const { logger } = await import("../../src/utils/logger.js");
-      expect(logger.error).toHaveBeenCalledWith("Error searching issues", expect.any(Object));
+      expect(logger.error).toHaveBeenCalledWith(
+        "Error searching issues",
+        expect.any(Object),
+      );
     });
   });
 });

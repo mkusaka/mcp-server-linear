@@ -10,14 +10,14 @@ vi.mock("@linear/sdk", () => {
       this.name = "LinearError";
     }
   };
-  
+
   const InvalidInputLinearError = class InvalidInputLinearError extends Error {
     constructor(message) {
       super(message);
       this.name = "InvalidInputLinearError";
     }
   };
-  
+
   return {
     LinearError,
     InvalidInputLinearError,
@@ -45,18 +45,20 @@ vi.mock("neverthrow", () => {
 
 vi.mock("../../src/utils/linear.js", () => {
   const mockLinearClient = {
-    createIssue: vi.fn(({ teamId, title, description, projectId, estimate, priority }) => {
-      if (teamId === "test-team-id") {
-        return Promise.resolve({
-          issue: {
-            id: "new-mock-issue-id",
-            title,
-            description,
-          },
-        });
-      }
-      throw new Error("Team not found");
-    }),
+    createIssue: vi.fn(
+      ({ teamId, title, description, projectId, estimate, priority }) => {
+        if (teamId === "test-team-id") {
+          return Promise.resolve({
+            issue: {
+              id: "new-mock-issue-id",
+              title,
+              description,
+            },
+          });
+        }
+        throw new Error("Team not found");
+      },
+    ),
     issue: vi.fn((issueId) => {
       if (issueId === "new-mock-issue-id") {
         return Promise.resolve({
@@ -107,7 +109,7 @@ describe("Issue Handlers", () => {
 
       expect(result.isOk).toBeDefined();
       expect(result.isOk()).toBe(true);
-      
+
       if (result.isOk()) {
         const issue = result.value;
         expect(issue.id).toBe("new-mock-issue-id");
@@ -146,7 +148,7 @@ describe("Issue Handlers", () => {
 
       expect(result.isErr).toBeDefined();
       expect(result.isErr()).toBe(true);
-      
+
       if (result.isErr()) {
         const error = result.error;
         expect(error.type).toBe("API_ERROR");
@@ -155,7 +157,10 @@ describe("Issue Handlers", () => {
 
       // Verify error was logged
       const { logger } = await import("../../src/utils/logger.js");
-      expect(logger.error).toHaveBeenCalledWith("Linear API error", expect.any(Object));
+      expect(logger.error).toHaveBeenCalledWith(
+        "Linear API error",
+        expect.any(Object),
+      );
     });
 
     it("should handle invalid input errors", async () => {
@@ -176,7 +181,7 @@ describe("Issue Handlers", () => {
 
       expect(result.isErr).toBeDefined();
       expect(result.isErr()).toBe(true);
-      
+
       if (result.isErr()) {
         const error = result.error;
         expect(error.type).toBe("INVALID_INPUT");
@@ -185,7 +190,10 @@ describe("Issue Handlers", () => {
 
       // Verify error was logged
       const { logger } = await import("../../src/utils/logger.js");
-      expect(logger.error).toHaveBeenCalledWith("Invalid input error", expect.any(Object));
+      expect(logger.error).toHaveBeenCalledWith(
+        "Invalid input error",
+        expect.any(Object),
+      );
     });
 
     it("should handle unexpected errors", async () => {
@@ -197,13 +205,15 @@ describe("Issue Handlers", () => {
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = getLinearClient();
-      mockClient.createIssue = vi.fn().mockRejectedValue(new Error("Unexpected error"));
+      mockClient.createIssue = vi
+        .fn()
+        .mockRejectedValue(new Error("Unexpected error"));
 
       const result = await createIssue(input);
 
       expect(result.isErr).toBeDefined();
       expect(result.isErr()).toBe(true);
-      
+
       if (result.isErr()) {
         const error = result.error;
         expect(error.type).toBe("API_ERROR");
@@ -212,7 +222,10 @@ describe("Issue Handlers", () => {
 
       // Verify error was logged
       const { logger } = await import("../../src/utils/logger.js");
-      expect(logger.error).toHaveBeenCalledWith("Unexpected error", expect.any(Object));
+      expect(logger.error).toHaveBeenCalledWith(
+        "Unexpected error",
+        expect.any(Object),
+      );
     });
 
     it("should handle issue not found after creation", async () => {
@@ -232,7 +245,7 @@ describe("Issue Handlers", () => {
 
       expect(result.isErr).toBeDefined();
       expect(result.isErr()).toBe(true);
-      
+
       if (result.isErr()) {
         const error = result.error;
         expect(error.type).toBe("NOT_FOUND");
@@ -241,7 +254,9 @@ describe("Issue Handlers", () => {
 
       // Verify error was logged
       const { logger } = await import("../../src/utils/logger.js");
-      expect(logger.error).toHaveBeenCalledWith("Issue not found after creation");
+      expect(logger.error).toHaveBeenCalledWith(
+        "Issue not found after creation",
+      );
     });
   });
 });
