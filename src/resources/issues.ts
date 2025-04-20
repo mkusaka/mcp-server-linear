@@ -29,32 +29,29 @@ export const getProjectIssuesResource: ToolCallback<
     return {
       content: [
         {
-          type: "resource" as const,
-          resource: {
-            uri: `issues://projects/${args.projectId}/issues`,
-            text: JSON.stringify(
-              {
-                project: {
-                  id: project.id,
-                  name: project.name,
-                  description: project.description,
-                  state: project.state,
-                },
-                issues: issues.nodes.map((issue) => ({
-                  id: issue.id,
-                  title: issue.title,
-                  description: issue.description,
-                  state: {
-                    type: issue.state,
-                    name: issue.state,
-                  },
-                })),
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              project: {
+                id: project.id,
+                name: project.name,
+                description: project.description,
+                state: project.state,
               },
-              null,
-              2,
-            ),
-            mimeType: "application/json",
-          },
+              issues: issues.nodes.map((issue) => ({
+                id: issue.id,
+                title: issue.title,
+                description: issue.description,
+                state: {
+                  type: issue.state,
+                  name: issue.state,
+                },
+              })),
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
         },
       ],
     };
@@ -77,6 +74,7 @@ export const getProjectIssuesResource: ToolCallback<
               null,
               2,
             ),
+            mimeType: "application/json",
           },
         ],
         isError: true,
@@ -95,6 +93,7 @@ export const getProjectIssuesResource: ToolCallback<
               null,
               2,
             ),
+            mimeType: "application/json",
           },
         ],
         isError: true,
@@ -112,6 +111,7 @@ export const getProjectIssuesResource: ToolCallback<
             null,
             2,
           ),
+          mimeType: "application/json",
         },
       ],
       isError: true,
@@ -211,30 +211,27 @@ export const getIssueResource: ToolCallback<
     return {
       content: [
         {
-          type: "resource" as const,
-          resource: {
-            uri: `issues://${args.issueId}`,
-            text: JSON.stringify(
-              {
-                issue: {
-                  id: issue.id,
-                  title: issue.title,
-                  description: issue.description,
-                  state: {
-                    type: stateData,
-                    name: stateData,
-                  },
-                  comments,
-                  children,
-                  parent,
-                  labels,
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              issue: {
+                id: issue.id,
+                title: issue.title,
+                description: issue.description,
+                state: {
+                  type: stateData,
+                  name: stateData,
                 },
+                comments,
+                children,
+                parent,
+                labels,
               },
-              null,
-              2,
-            ),
-            mimeType: "application/json",
-          },
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
         },
       ],
     };
@@ -257,6 +254,7 @@ export const getIssueResource: ToolCallback<
               null,
               2,
             ),
+            mimeType: "application/json",
           },
         ],
         isError: true,
@@ -275,6 +273,7 @@ export const getIssueResource: ToolCallback<
               null,
               2,
             ),
+            mimeType: "application/json",
           },
         ],
         isError: true,
@@ -292,6 +291,7 @@ export const getIssueResource: ToolCallback<
             null,
             2,
           ),
+          mimeType: "application/json",
         },
       ],
       isError: true,
@@ -338,6 +338,7 @@ export const getIssueStatusListResource: ToolCallback<
             null,
             2,
           ),
+          mimeType: "application/json",
         },
       ],
     };
@@ -381,6 +382,7 @@ export const getIssuePrioritiesResource: ToolCallback<
             null,
             2,
           ),
+          mimeType: "application/json",
         },
       ],
     };
