@@ -5,8 +5,9 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { getIssueResource, getProjectIssuesResource, getProjectStatusesResource } from "./resources/issues.js";
 import { getIssueLabelsResource } from "./resources/labels.js";
 import { getProjectResource, getProjectsResource } from "./resources/project.js";
+import { getViewerResource } from "./resources/viewer.js";
 import { CreateCommentSchema, DeleteCommentSchema, GetIssueCommentsSchema, UpdateCommentSchema } from "./schemas/comments.js";
-import { CreateIssueSchema, DeleteIssueSchema, GetIssueLabelsSchema, GetIssueSchema, GetProjectIssuesSchema, GetProjectSchema, GetProjectsSchema, GetProjectStatusesSchema, UpdateIssueEstimateSchema, UpdateIssueLabelsSchema, UpdateIssuePrioritySchema, UpdateIssueSchema, UpdateIssueStateSchema } from "./schemas/issues.js";
+import { CreateIssueSchema, DeleteIssueSchema, GetIssueLabelsSchema, GetIssueSchema, GetProjectIssuesSchema, GetProjectSchema, GetProjectsSchema, GetProjectStatusesSchema, GetViewerSchema, UpdateIssueEstimateSchema, UpdateIssueLabelsSchema, UpdateIssuePrioritySchema, UpdateIssueSchema, UpdateIssueStateSchema } from "./schemas/issues.js";
 import { createCommentTool, deleteCommentTool, getIssueCommentsResource, updateCommentTool } from "./tools/comments.js";
 import { createIssueTool, deleteIssueTool, updateIssueEstimateTool, updateIssueLabelsTool, updateIssuePriorityTool, updateIssueStateTool, updateIssueTool } from "./tools/issues.js";
 import { logger } from "./utils/logger.js";
@@ -152,6 +153,14 @@ server.tool(
   getIssueCommentsResource
 );
 
+// Define get viewer resource with teams
+server.tool(
+  "get_viewer",
+  "Get current user information including teams",
+  GetViewerSchema.shape,
+  getViewerResource
+);
+
 async function runServer() {
   logger.info("Starting Linear MCP Server", {
     nodeEnv: process.env.NODE_ENV,
@@ -167,4 +176,4 @@ async function runServer() {
 runServer().catch((error) => {
   logger.error("Fatal error in main():", error);
   process.exit(1);
-}); 
+});        

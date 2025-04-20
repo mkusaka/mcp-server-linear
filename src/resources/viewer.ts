@@ -8,7 +8,11 @@ export const getViewerResource: ToolCallback<typeof GetViewerSchema.shape> = asy
   const client = getLinearClient();
   try {
     const viewer = await client.viewer;
-    logger.info("Retrieved viewer info", { viewerId: viewer.id });
+    const teams = await viewer.teams();
+    logger.info("Retrieved viewer info", { 
+      viewerId: viewer.id,
+      teamsCount: teams.nodes.length
+    });
 
     return {
       content: [
@@ -19,6 +23,11 @@ export const getViewerResource: ToolCallback<typeof GetViewerSchema.shape> = asy
               id: viewer.id,
               name: viewer.name,
               email: viewer.email,
+              teams: teams.nodes.map(team => ({
+                id: team.id,
+                name: team.name,
+                key: team.key
+              }))
             },
           }, null, 2),
           mimeType: "application/json"
