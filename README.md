@@ -91,6 +91,16 @@ For development and testing, you can use the built-in inspector:
 npm run debug
 ```
 
+#### Command Line Options
+
+```bash
+# Enable logging (logs to linear-mcp.log by default)
+npm run start -- --debug
+
+# Enable logging with custom log file path
+npm run start -- --debug --log-file custom-path.log
+```
+
 ### Integration with MCP Tools
 
 #### Cline Integration

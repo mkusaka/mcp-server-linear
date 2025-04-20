@@ -16,6 +16,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "debug": "pnpm build && mcp-inspector dist/index.js",
+    "start": "node dist/index.js",
     "prepublishOnly": "pnpm build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -44,6 +45,7 @@
   "dependencies": {
     "@linear/sdk": "^39.0.0",
     "@modelcontextprotocol/sdk": "^1.10.1",
+    "commander": "^13.1.0",
     "neverthrow": "^8.2.0",
     "winston": "^3.17.0",
     "zod": "^3.24.3",
