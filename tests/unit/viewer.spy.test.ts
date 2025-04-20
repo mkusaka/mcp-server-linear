@@ -1,6 +1,24 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { getViewerResource } from "../../src/resources/viewer.js";
 import { getLinearClient } from "../../src/utils/linear.js";
+import { LinearError } from "@linear/sdk";
+
+vi.mock("@linear/sdk", () => {
+  return {
+    LinearError: class LinearError extends Error {
+      constructor(options) {
+        super(typeof options === 'object' ? options.message : options);
+        this.name = "LinearError";
+      }
+    },
+    InvalidInputLinearError: class InvalidInputLinearError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "InvalidInputLinearError";
+      }
+    }
+  };
+});
 
 const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -19,7 +37,7 @@ describe("Viewer Resource Handlers with Spy", () => {
       vi.mock("../../src/utils/linear.js", () => ({
         getLinearClient: vi.fn().mockImplementation(() => ({
           get viewer() {
-            throw new Error("API error");
+            throw new LinearError({ message: "API error" });
           }
         })),
         resetLinearClient: vi.fn(),
@@ -40,7 +58,7 @@ describe("Viewer Resource Handlers with Spy", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Unexpected error");
+        expect(data.error).toBe("Linear API error");
         // expect(consoleSpy).toHaveBeenCalled();
       }
     });

@@ -1,12 +1,30 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { getViewerResource } from "../../src/resources/viewer.js";
+import { LinearError } from "@linear/sdk";
+
+vi.mock("@linear/sdk", () => {
+  return {
+    LinearError: class LinearError extends Error {
+      constructor(options) {
+        super(typeof options === 'object' ? options.message : options);
+        this.name = "LinearError";
+      }
+    },
+    InvalidInputLinearError: class InvalidInputLinearError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "InvalidInputLinearError";
+      }
+    }
+  };
+});
 
 vi.mock("../../src/utils/linear.js", () => {
   return {
     resetLinearClient: vi.fn(),
     getLinearClient: vi.fn(() => ({
       get viewer() {
-        throw new Error("API error");
+        throw new LinearError({ message: "API error" });
       }
     })),
   };
@@ -32,7 +50,7 @@ describe("Viewer Resource Error Handlers", () => {
       const contentItem = result.content[0];
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
-        expect(data).toHaveProperty("error", "Unexpected error");
+        expect(data).toHaveProperty("error", "Linear API error");
         expect(data).toHaveProperty("message", "API error");
       }
     });
