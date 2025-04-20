@@ -70,7 +70,53 @@ For development and testing, you can use the built-in inspector:
 npm run debug
 ```
 
-### Using with MCP Clients
+### Integration with MCP Tools
+
+#### Cline Integration
+
+[Cline](https://github.com/saoudrizwan/cline) is a VS Code extension that allows you to use MCP servers with Claude AI. To set up this MCP server with Cline:
+
+1. Open your Cline MCP settings file:
+   - macOS: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+   - Windows: `%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+   - Linux: `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+
+2. Add the Linear MCP server configuration:
+   ```json
+   {
+     "mcpServers": {
+       "linear": {
+         "command": "node",
+         "args": ["/path/to/mcp-server-linear/dist/index.js"],
+         "env": {
+           "LINEAR_API_KEY": "your_linear_api_key"
+         },
+         "disabled": false,
+         "autoApprove": []
+       }
+     }
+   }
+   ```
+
+#### MCP Inspector
+
+For development and testing, you can use the MCP Inspector to interact with the server:
+
+1. Install the MCP Inspector globally:
+   ```bash
+   npm install -g @modelcontextprotocol/inspector
+   ```
+
+2. Run the server with the inspector:
+   ```bash
+   LINEAR_API_KEY=your_api_key_here mcp-inspector /path/to/mcp-server-linear/dist/index.js
+   ```
+
+#### Anthropic Claude Integration
+
+You can use this MCP server with Anthropic Claude through compatible clients like Cline or directly through the Claude API with MCP support.
+
+#### Other MCP Clients
 
 The server exposes various tools and resources over MCP that can be consumed by compatible clients:
 
