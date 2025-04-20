@@ -21,15 +21,15 @@ export const logger = winston.createLogger({
 
 export function configureLogger(config: LoggerConfig = {}): void {
   const { debug, logFile } = { ...defaultConfig, ...config };
-  
+
   logger.clear();
-  
+
   if (debug) {
     logger.add(
       new winston.transports.File({
         filename: logFile,
         level: "info",
-      })
+      }),
     );
   }
 }
