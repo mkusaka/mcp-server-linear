@@ -26,8 +26,8 @@
     "linear",
     "api"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "mkusaka <hinoshita1992@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "@modelcontextprotocol/inspector": "^0.10.2",
     "@types/node": "^22.14.1",
