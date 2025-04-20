@@ -18,7 +18,8 @@
     "debug": "pnpm build && mcp-inspector dist/index.js",
     "prepublishOnly": "pnpm build",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit"
   },
   "publishConfig": {
     "access": "public"
