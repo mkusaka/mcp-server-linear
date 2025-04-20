@@ -57,9 +57,9 @@ export const GetIssueSchema = z.object({
 
 export const GetViewerSchema = z.object({});
 
-export const GetProjectStatusesSchema = z
+export const GetIssueStatusListSchema = z
   .object({})
-  .describe("get project statuses which are linked to the project");
+  .describe("get issue attachable status list");
 
 export const GetIssuePrioritiesSchema = z
   .object({})
@@ -117,8 +117,6 @@ export const UpdateIssueStateSchema = z.object({
     .string()
     .min(1, "issue id is required")
     .describe("target issue id"),
-  stateId: z
-    .enum(["todo", "in_progress", "done"])
-    .optional()
+  issueName: z.string()
     .describe("issue state"),
 });

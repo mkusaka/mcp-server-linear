@@ -438,7 +438,7 @@ export const updateIssueStateTool: ToolCallback<
     }
 
     const updatedIssue = await issue.update({
-      stateId: args.stateId,
+      stateId: args.issueName,
     });
 
     const issuePayload = await updatedIssue.issue;
@@ -457,7 +457,7 @@ export const updateIssueStateTool: ToolCallback<
 
     logger.info("Updated issue state", {
       issueId: issuePayload.id,
-      stateId: args.stateId,
+      issueName: args.issueName,
     });
 
     return {
