@@ -22,7 +22,9 @@ export function getLinearClient(): LinearClient {
       logger.info("Using API key authentication");
       client = new LinearClient({ apiKey });
     } else {
-      throw new Error("Neither LINEAR_API_KEY nor OAuth credentials (LINEAR_OAUTH_CLIENT_ID, LINEAR_OAUTH_CLIENT_SECRET) are set in environment variables");
+      throw new Error(
+        "Neither LINEAR_API_KEY nor OAuth credentials (LINEAR_OAUTH_CLIENT_ID, LINEAR_OAUTH_CLIENT_SECRET) are set in environment variables",
+      );
     }
   }
   return client;
