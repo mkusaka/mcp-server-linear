@@ -8,8 +8,10 @@ import { getProjectResource, getProjectsResource } from "./resources/project.js"
 import { getViewerResource } from "./resources/viewer.js";
 import { CreateCommentSchema, DeleteCommentSchema, GetIssueCommentsSchema, UpdateCommentSchema } from "./schemas/comments.js";
 import { CreateIssueSchema, DeleteIssueSchema, GetIssueLabelsSchema, GetIssueSchema, GetProjectIssuesSchema, GetProjectSchema, GetProjectsSchema, GetProjectStatusesSchema, GetViewerSchema, UpdateIssueEstimateSchema, UpdateIssueLabelsSchema, UpdateIssuePrioritySchema, UpdateIssueSchema, UpdateIssueStateSchema } from "./schemas/issues.js";
+import { SearchIssuesSchema } from "./schemas/issueFilters.js";
 import { createCommentTool, deleteCommentTool, getIssueCommentsResource, updateCommentTool } from "./tools/comments.js";
 import { createIssueTool, deleteIssueTool, updateIssueEstimateTool, updateIssueLabelsTool, updateIssuePriorityTool, updateIssueStateTool, updateIssueTool } from "./tools/issues.js";
+import { searchIssuesTool } from "./tools/searchIssues.js";
 import { logger } from "./utils/logger.js";
 
 const server = new McpServer({
@@ -161,6 +163,14 @@ server.tool(
   getViewerResource
 );
 
+// Define search issues tool
+server.tool(
+  "search_issues",
+  "Search for issues with advanced filtering options",
+  SearchIssuesSchema.shape,
+  searchIssuesTool
+);
+
 async function runServer() {
   logger.info("Starting Linear MCP Server", {
     nodeEnv: process.env.NODE_ENV,
@@ -176,4 +186,4 @@ async function runServer() {
 runServer().catch((error) => {
   logger.error("Fatal error in main():", error);
   process.exit(1);
-});        
+});                
