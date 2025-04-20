@@ -7,6 +7,7 @@ Model Context Protocol (MCP) server for interacting with the Linear API. This se
 The `mcp-server-linear` project serves as a bridge between client applications (particularly AI assistants and other tools) and Linear, providing a standardized interface for accessing and manipulating Linear resources. Clients can retrieve information about issues, projects, and labels, as well as create, update, and delete issues and comments.
 
 Key features:
+
 - Retrieve Linear resources (issues, projects, labels, comments)
 - Create, update, and delete issues
 - Create, update, and delete comments
@@ -77,11 +78,13 @@ npm run debug
 [Cline](https://github.com/saoudrizwan/cline) is a VS Code extension that allows you to use MCP servers with Claude AI. To set up this MCP server with Cline:
 
 1. Open your Cline MCP settings file:
+
    - macOS: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
    - Windows: `%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
    - Linux: `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
 
 2. Add the Linear MCP server configuration:
+
    ```json
    {
      "mcpServers": {
@@ -99,6 +102,7 @@ npm run debug
    ```
 
    Alternatively, you can use npx to run the package directly:
+
    ```json
    {
      "mcpServers": {
@@ -128,16 +132,19 @@ LINEAR_API_KEY=your_api_key_here npx -y @mkusaka/mcp-server-linear
 For development and testing, you can use the MCP Inspector to interact with the server:
 
 1. Install the MCP Inspector globally:
+
    ```bash
    npm install -g @modelcontextprotocol/inspector
    ```
 
 2. Run the server with the inspector:
+
    ```bash
    LINEAR_API_KEY=your_api_key_here mcp-inspector /path/to/mcp-server-linear/dist/index.js
    ```
 
    Or using npx:
+
    ```bash
    LINEAR_API_KEY=your_api_key_here npx -y @modelcontextprotocol/inspector @mkusaka/mcp-server-linear
    ```
@@ -190,6 +197,7 @@ The server exposes various tools and resources over MCP that can be consumed by 
 #### Available Tools
 
 Issue Management:
+
 - `create_issue` - Create a new issue in Linear
 - `update_issue` - Update an existing issue
 - `delete_issue` - Delete an existing issue
@@ -199,12 +207,14 @@ Issue Management:
 - `update_issue_state` - Update the state of an issue
 
 Comment Management:
+
 - `create_comment` - Create a new comment on an issue
 - `update_comment` - Update an existing comment
 - `delete_comment` - Delete an existing comment
 - `get_issue_comments` - Get comments for a specific issue
 
 Resource Access:
+
 - `projects` - Get all projects in Linear
 - `project` - Get a single project by ID
 - `issue` - Get a single issue by ID
@@ -275,7 +285,7 @@ Delete an existing issue in Linear.
 ```typescript
 // Tool name: delete_issue
 {
-  issueId: string;     // Target issue ID (required)
+  issueId: string; // Target issue ID (required)
 }
 ```
 
@@ -288,8 +298,8 @@ Create a new comment on an issue in Linear.
 ```typescript
 // Tool name: create_comment
 {
-  issueId: string;     // Target issue ID (required)
-  body: string;        // Comment body (required)
+  issueId: string; // Target issue ID (required)
+  body: string; // Comment body (required)
 }
 ```
 
@@ -302,7 +312,7 @@ Get a single project in Linear.
 ```typescript
 // Tool name: project
 {
-  projectId: string;   // Target project ID (required)
+  projectId: string; // Target project ID (required)
 }
 ```
 
@@ -313,7 +323,7 @@ Get all issues in a project in Linear.
 ```typescript
 // Tool name: project-issues
 {
-  projectId: string;   // Target project ID (required)
+  projectId: string; // Target project ID (required)
 }
 ```
 

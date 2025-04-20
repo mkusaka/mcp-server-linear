@@ -1,4 +1,4 @@
-import { http } from 'msw'
+import { http } from 'msw';
 
 const mockIssues = {
   nodes: [
@@ -6,20 +6,20 @@ const mockIssues = {
       id: 'test-issue-1',
       title: 'Test Issue 1',
       description: 'Test Description 1',
-      state: { name: 'Todo' }
+      state: { name: 'Todo' },
     },
     {
       id: 'test-issue-2',
       title: 'Test Issue 2',
       description: 'Test Description 2',
-      state: { name: 'In Progress' }
-    }
-  ]
-}
+      state: { name: 'In Progress' },
+    },
+  ],
+};
 
 export const handlers = [
   http.post('https://api.linear.app/graphql', async ({ request }) => {
-    const { query, variables } = await request.json()
+    const { query, variables } = await request.json();
 
     // Project Query
     if (query.includes('project(id:')) {
@@ -28,10 +28,10 @@ export const handlers = [
           project: {
             id: variables.id || 'test-project-id',
             name: 'Test Project',
-            issues: mockIssues
-          }
-        }
-      })
+            issues: mockIssues,
+          },
+        },
+      });
     }
 
     // Initiative Query
@@ -46,13 +46,13 @@ export const handlers = [
                 {
                   id: 'test-project-1',
                   name: 'Test Project 1',
-                  issues: mockIssues
-                }
-              ]
-            }
-          }
-        }
-      })
+                  issues: mockIssues,
+                },
+              ],
+            },
+          },
+        },
+      });
     }
 
     // Issue Query
@@ -63,12 +63,12 @@ export const handlers = [
             id: variables.id || 'test-issue-id',
             title: 'Test Issue',
             description: 'Test Description',
-            state: { name: 'Todo' }
-          }
-        }
-      })
+            state: { name: 'Todo' },
+          },
+        },
+      });
     }
 
-    return Response.error()
-  })
-] 
+    return Response.error();
+  }),
+];

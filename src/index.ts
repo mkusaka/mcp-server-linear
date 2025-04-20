@@ -1,179 +1,206 @@
 #!/usr/bin/env node
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getIssueResource, getProjectIssuesResource, getProjectStatusesResource } from "./resources/issues.js";
-import { getIssueLabelsResource } from "./resources/labels.js";
-import { getProjectResource, getProjectsResource } from "./resources/project.js";
-import { getViewerResource } from "./resources/viewer.js";
-import { CreateCommentSchema, DeleteCommentSchema, GetIssueCommentsSchema, UpdateCommentSchema } from "./schemas/comments.js";
-import { CreateIssueSchema, DeleteIssueSchema, GetIssueLabelsSchema, GetIssueSchema, GetProjectIssuesSchema, GetProjectSchema, GetProjectsSchema, GetProjectStatusesSchema, GetViewerSchema, UpdateIssueEstimateSchema, UpdateIssueLabelsSchema, UpdateIssuePrioritySchema, UpdateIssueSchema, UpdateIssueStateSchema } from "./schemas/issues.js";
-import { createCommentTool, deleteCommentTool, getIssueCommentsResource, updateCommentTool } from "./tools/comments.js";
-import { createIssueTool, deleteIssueTool, updateIssueEstimateTool, updateIssueLabelsTool, updateIssuePriorityTool, updateIssueStateTool, updateIssueTool } from "./tools/issues.js";
-import { logger } from "./utils/logger.js";
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import {
+  getIssueResource,
+  getProjectIssuesResource,
+  getProjectStatusesResource,
+} from './resources/issues.js';
+import { getIssueLabelsResource } from './resources/labels.js';
+import { getProjectResource, getProjectsResource } from './resources/project.js';
+import { getViewerResource } from './resources/viewer.js';
+import {
+  CreateCommentSchema,
+  DeleteCommentSchema,
+  GetIssueCommentsSchema,
+  UpdateCommentSchema,
+} from './schemas/comments.js';
+import {
+  CreateIssueSchema,
+  DeleteIssueSchema,
+  GetIssueLabelsSchema,
+  GetIssueSchema,
+  GetProjectIssuesSchema,
+  GetProjectSchema,
+  GetProjectsSchema,
+  GetProjectStatusesSchema,
+  GetViewerSchema,
+  UpdateIssueEstimateSchema,
+  UpdateIssueLabelsSchema,
+  UpdateIssuePrioritySchema,
+  UpdateIssueSchema,
+  UpdateIssueStateSchema,
+} from './schemas/issues.js';
+import {
+  createCommentTool,
+  deleteCommentTool,
+  getIssueCommentsResource,
+  updateCommentTool,
+} from './tools/comments.js';
+import {
+  createIssueTool,
+  deleteIssueTool,
+  updateIssueEstimateTool,
+  updateIssueLabelsTool,
+  updateIssuePriorityTool,
+  updateIssueStateTool,
+  updateIssueTool,
+} from './tools/issues.js';
+import { logger } from './utils/logger.js';
 
 const server = new McpServer({
-  name: "linear-mcp-server",
-  version: "1.0.0"
+  name: 'linear-mcp-server',
+  version: '1.0.0',
 });
 
 // Define projects list resource
-server.tool(
-  "projects",
-  "Get all projects in Linear",
-  GetProjectsSchema.shape,
-  getProjectsResource
-);
+server.tool('projects', 'Get all projects in Linear', GetProjectsSchema.shape, getProjectsResource);
 
 // Define single project resource
 server.tool(
-  "project",
-  "Get a single project in Linear",
+  'project',
+  'Get a single project in Linear',
   GetProjectSchema.shape,
   getProjectResource
 );
 
 // Define single issue resource
-server.tool(
-  "issue",
-  "Get a single issue in Linear",
-  GetIssueSchema.shape,
-  getIssueResource
-);
+server.tool('issue', 'Get a single issue in Linear', GetIssueSchema.shape, getIssueResource);
 
 // Define project statuses resource
 server.tool(
-  "project-statuses",
-  "Get all project statuses in Linear",
+  'project-statuses',
+  'Get all project statuses in Linear',
   GetProjectStatusesSchema.shape,
   getProjectStatusesResource
 );
 
 // Define project issues resource
 server.tool(
-  "project-issues",
-  "Get all issues in a project in Linear",
+  'project-issues',
+  'Get all issues in a project in Linear',
   GetProjectIssuesSchema.shape,
   getProjectIssuesResource
 );
 
 // Define issue labels resource
 server.tool(
-  "issue-labels",
-  "Get all issue labels in Linear",
+  'issue-labels',
+  'Get all issue labels in Linear',
   GetIssueLabelsSchema.shape,
   getIssueLabelsResource
 );
 
 // Define create issue tool
 server.tool(
-  "create_issue",
-  "Create a new issue in Linear",
+  'create_issue',
+  'Create a new issue in Linear',
   CreateIssueSchema.shape,
   createIssueTool
 );
 
 // Define update issue tool
 server.tool(
-  "update_issue",
-  "Update an existing issue in Linear",
+  'update_issue',
+  'Update an existing issue in Linear',
   UpdateIssueSchema.shape,
   updateIssueTool
 );
 
 // Define delete issue tool
 server.tool(
-  "delete_issue",
-  "Delete an existing issue in Linear",
+  'delete_issue',
+  'Delete an existing issue in Linear',
   DeleteIssueSchema.shape,
   deleteIssueTool
 );
 
 // Define update issue labels tool
 server.tool(
-  "update_issue_labels",
-  "Update the labels of an existing issue in Linear",
+  'update_issue_labels',
+  'Update the labels of an existing issue in Linear',
   UpdateIssueLabelsSchema.shape,
   updateIssueLabelsTool
 );
 
 // Define update issue priority tool
 server.tool(
-  "update_issue_priority",
-  "Update the priority of an existing issue in Linear",
+  'update_issue_priority',
+  'Update the priority of an existing issue in Linear',
   UpdateIssuePrioritySchema.shape,
   updateIssuePriorityTool
 );
 
 // Define update issue estimate tool
 server.tool(
-  "update_issue_estimate",
-  "Update the estimate of an existing issue in Linear",
+  'update_issue_estimate',
+  'Update the estimate of an existing issue in Linear',
   UpdateIssueEstimateSchema.shape,
   updateIssueEstimateTool
 );
 
 // Define update issue state tool
 server.tool(
-  "update_issue_state",
-  "Update the state of an existing issue in Linear",
+  'update_issue_state',
+  'Update the state of an existing issue in Linear',
   UpdateIssueStateSchema.shape,
   updateIssueStateTool
 );
 
 // Define create comment tool
 server.tool(
-  "create_comment",
-  "Create a new comment in Linear",
+  'create_comment',
+  'Create a new comment in Linear',
   CreateCommentSchema.shape,
   createCommentTool
 );
 
 // Define update comment tool
 server.tool(
-  "update_comment",
-  "Update an existing comment in Linear",
+  'update_comment',
+  'Update an existing comment in Linear',
   UpdateCommentSchema.shape,
   updateCommentTool
 );
 
 // Define delete comment tool
 server.tool(
-  "delete_comment",
-  "Delete an existing comment in Linear",
+  'delete_comment',
+  'Delete an existing comment in Linear',
   DeleteCommentSchema.shape,
   deleteCommentTool
 );
 
 // Define get issue comments resource
 server.tool(
-  "get_issue_comments",
-  "Get comments for a specific issue in Linear",
+  'get_issue_comments',
+  'Get comments for a specific issue in Linear',
   GetIssueCommentsSchema.shape,
   getIssueCommentsResource
 );
 
 // Define get viewer resource with teams
 server.tool(
-  "get_viewer",
-  "Get current user information including teams",
+  'get_viewer',
+  'Get current user information including teams',
   GetViewerSchema.shape,
   getViewerResource
 );
 
 async function runServer() {
-  logger.info("Starting Linear MCP Server", {
+  logger.info('Starting Linear MCP Server', {
     nodeEnv: process.env.NODE_ENV,
     nodeVersion: process.version,
-    platform: process.platform
+    platform: process.platform,
   });
-  
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  logger.info("Linear MCP Server running on stdio");
+  logger.info('Linear MCP Server running on stdio');
 }
 
-runServer().catch((error) => {
-  logger.error("Fatal error in main():", error);
+runServer().catch(error => {
+  logger.error('Fatal error in main():', error);
   process.exit(1);
-});        
+});
