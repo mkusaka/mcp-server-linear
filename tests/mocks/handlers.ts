@@ -85,6 +85,16 @@ export const handlers = [
             },
             parent: null,
             url: "https://linear.app/team/issue/MOCK-123",
+            labels: {
+              nodes: [
+                {
+                  id: "mock-label-id",
+                  name: "Bug",
+                  description: "A bug that needs to be fixed",
+                  color: "#FF0000"
+                }
+              ]
+            }
           },
         },
       });

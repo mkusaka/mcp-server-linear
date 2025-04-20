@@ -125,69 +125,88 @@ export const getIssueResource: ToolCallback<
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId as string);
-    const commentsData = (async () => {
-      if (!args.includeComments) {
-        return [];
-      }
-      const comments = await issue.comments({
+    
+    const stateData = await issue.state;
+    
+    let comments: Array<{
+      id: string;
+      body: string;
+      user: { id: string; name: string } | null;
+      createdAt: Date;
+    }> = [];
+    if (args.includeComments) {
+      const commentsData = await issue.comments({
         includeArchived: false,
         orderBy: LinearDocument.PaginationOrderBy.CreatedAt,
       });
-      return await Promise.all(
-        comments.nodes.map(async (comment) => ({
-          id: comment.id,
-          body: comment.body,
-          user: await (async () => {
-            const user = await comment.user;
-            if (!user) {
-              return null;
-            }
-            return {
+      comments = await Promise.all(
+        commentsData.nodes.map(async (comment) => {
+          const user = await comment.user;
+          return {
+            id: comment.id,
+            body: comment.body,
+            user: user ? {
               id: user.id,
               name: user.name,
-            };
-          })(),
-          createdAt: comment.createdAt,
-        })),
+            } : null,
+            createdAt: comment.createdAt,
+          };
+        })
       );
-    })();
+    }
 
-    const childrenData = (async () => {
-      if (!args.includeChildren) {
-        return [];
-      }
-      const children = await issue.children();
-      return children.nodes.map((child) => {
-        return {
-          id: child.id,
-          title: child.title,
-          description: child.description,
+    let children: Array<{
+      id: string;
+      title: string;
+      description: string | undefined;
+      state: {
+        type: any;
+        name: any;
+      };
+    }> = [];
+    if (args.includeChildren) {
+      const childrenData = await issue.children();
+      children = await Promise.all(
+        childrenData.nodes.map(async (child) => {
+          const childState = await child.state;
+          return {
+            id: child.id,
+            title: child.title,
+            description: child.description,
+            state: {
+              type: childState,
+              name: childState,
+            },
+          };
+        })
+      );
+    }
+
+    let parent = null;
+    if (args.includeParent) {
+      const parentData = await issue.parent;
+      if (parentData) {
+        const parentState = await parentData.state;
+        parent = {
+          id: parentData.id,
+          title: parentData.title,
+          description: parentData.description,
           state: {
-            type: child.state,
-            name: child.state,
+            type: parentState,
+            name: parentState,
           },
         };
-      });
-    })();
+      }
+    }
+    
+    const labelsData = await issue.labels();
+    const labels = labelsData.nodes.map((label) => ({
+      id: label.id,
+      name: label.name,
+      description: label.description,
+      color: label.color,
+    }));
 
-    const parentData = (async () => {
-      if (!args.includeParent) {
-        return null;
-      }
-      const parent = await issue.parent;
-      if (!parent) {
-        return null;
-      }
-      return {
-        id: parent.id,
-        title: parent.title,
-        description: parent.description,
-        state: {
-          type: parent.state,
-          name: parent.state,
-        },
-      };
-    })();
     return {
       content: [
         {
@@ -201,12 +220,13 @@ export const getIssueResource: ToolCallback<
                   title: issue.title,
                   description: issue.description,
                   state: {
-                    type: issue.state,
-                    name: issue.state,
+                    type: stateData,
+                    name: stateData,
                   },
-                  comments: commentsData,
-                  children: childrenData,
-                  parent: parentData,
+                  comments,
+                  children,
+                  parent,
+                  labels,
                 },
               },
               null,
