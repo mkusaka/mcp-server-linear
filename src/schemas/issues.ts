@@ -117,8 +117,5 @@ export const UpdateIssueStateSchema = z.object({
     .string()
     .min(1, "issue id is required")
     .describe("target issue id"),
-  stateId: z
-    .string()
-    .min(1, "state id is required")
-    .describe("issue state id"),
+  stateId: z.string().min(1, "state id is required").describe("issue state id"),
 });
