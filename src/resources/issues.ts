@@ -10,6 +10,121 @@ import {
 } from '../schemas/issues.js';
 import { LinearDocument } from '@linear/sdk';
 
+import { z } from 'zod';
+
+export const GetInitiativeIssuesSchema = z.object({
+  initiativeId: z.string(),
+});
+
+export const getInitiativeIssuesResource: ToolCallback<typeof GetInitiativeIssuesSchema.shape> = async (
+  args,
+  extra
+) => {
+  const client = getLinearClient();
+  try {
+    const initiative = await client.initiative(args.initiativeId as string);
+    const issues = await (initiative as any).issues({
+      filter: {
+        state: {
+          type: { nin: ['completed', 'canceled'] },
+        },
+      },
+      orderBy: LinearDocument.PaginationOrderBy.UpdatedAt,
+      first: 100,
+    });
+
+    return {
+      content: [
+        {
+          type: 'resource' as const,
+          resource: {
+            uri: `issues://initiatives/${args.initiativeId}/issues`,
+            text: JSON.stringify(
+              {
+                initiative: {
+                  id: initiative.id,
+                  name: initiative.name,
+                  description: initiative.description,
+                },
+                issues: issues.nodes.map((issue: any) => ({
+                  id: issue.id,
+                  title: issue.title,
+                  description: issue.description,
+                  state: {
+                    type: issue.state,
+                    name: issue.state,
+                  },
+                })),
+              },
+              null,
+              2
+            ),
+            mimeType: 'application/json',
+          },
+        },
+      ],
+    };
+  } catch (error) {
+    logger.error('Failed to get initiative issues', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      initiativeId: args.initiativeId,
+    });
+
+    if (error instanceof InvalidInputLinearError) {
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: JSON.stringify(
+              {
+                error: 'Invalid input',
+                message: error.message,
+              },
+              null,
+              2
+            ),
+          },
+        ],
+        isError: true,
+      };
+    }
+    if (error instanceof LinearError) {
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: JSON.stringify(
+              {
+                error: 'Linear API error',
+                message: error.message,
+              },
+              null,
+              2
+            ),
+          },
+        ],
+        isError: true,
+      };
+    }
+    return {
+      content: [
+        {
+          type: 'text' as const,
+          text: JSON.stringify(
+            {
+              error: 'Unexpected error',
+              message: error instanceof Error ? error.message : 'Unknown error',
+            },
+            null,
+            2
+          ),
+        },
+      ],
+      isError: true,
+    };
+  }
+};
+
 export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchema.shape> = async (
   args,
   extra
@@ -41,7 +156,7 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
                   description: project.description,
                   state: project.state,
                 },
-                issues: issues.nodes.map(issue => ({
+                issues: issues.nodes.map((issue: any) => ({
                   id: issue.id,
                   title: issue.title,
                   description: issue.description,

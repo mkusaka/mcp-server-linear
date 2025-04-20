@@ -4,7 +4,7 @@ import {
   getInitiativeIssuesResource,
   getIssueResource,
 } from '../../src/resources/issues';
-import { ReadResourceTemplateCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
 import '../mocks/linear';
 
 describe('issues', () => {
@@ -14,13 +14,12 @@ describe('issues', () => {
 
   it('should get project issues', async () => {
     const result = await getProjectIssuesResource(
-      new URL('http://example.com/project/123/issues'),
       { projectId: 'test-project-id' },
-      {} as ReadResourceTemplateCallback
+      {} as any
     );
 
-    expect(result.contents).toHaveLength(1);
-    const content = JSON.parse(result.contents[0].text);
+    expect(result.content).toHaveLength(1);
+    const content = JSON.parse(result.content[0].text as string);
     expect(content).toMatchObject({
       project: {
         id: 'test-project-id',
@@ -43,13 +42,12 @@ describe('issues', () => {
 
   it('should get initiative issues', async () => {
     const result = await getInitiativeIssuesResource(
-      new URL('http://example.com/initiative/123/issues'),
       { initiativeId: 'test-initiative-id' },
-      {} as ReadResourceTemplateCallback
+      {} as any
     );
 
-    expect(result.contents).toHaveLength(1);
-    const content = JSON.parse(result.contents[0].text);
+    expect(result.content).toHaveLength(1);
+    const content = JSON.parse(result.content[0].text as string);
     expect(content).toMatchObject({
       initiative: {
         id: 'test-initiative-id',
@@ -67,13 +65,17 @@ describe('issues', () => {
 
   it('should get single issue', async () => {
     const result = await getIssueResource(
-      new URL('http://example.com/issue/123'),
-      { issueId: 'test-issue-id' },
-      {} as ReadResourceTemplateCallback
+      { 
+        issueId: 'test-issue-id',
+        includeComments: false,
+        includeChildren: false,
+        includeParent: false
+      },
+      {} as any
     );
 
-    expect(result.contents).toHaveLength(1);
-    const content = JSON.parse(result.contents[0].text);
+    expect(result.content).toHaveLength(1);
+    const content = JSON.parse(result.content[0].text as string);
     expect(content).toMatchObject({
       id: 'test-issue-id',
       title: 'Test Issue',
