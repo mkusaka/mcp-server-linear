@@ -71,7 +71,7 @@ describe("Resource Handlers", () => {
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
       expect(result.content[0].type).toBe("text");
-      // expect(result.content[0].mimeType).toBe("application/json");
+      expect(result.content[0].mimeType).toBe("application/json");
     });
   });
 });
