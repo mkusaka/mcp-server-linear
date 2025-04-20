@@ -14,6 +14,32 @@ export const handlers = [
       variables: Record<string, any>;
     };
 
+    if (query.includes("viewer") || query.includes("Viewer")) {
+      return HttpResponse.json({
+        data: {
+          viewer: {
+            id: "mock-user-id",
+            name: "Mock User",
+            email: "mock.user@example.com",
+            teams: {
+              nodes: [
+                {
+                  id: "mock-team-id-1",
+                  name: "Team 1",
+                  key: "TEAM1",
+                },
+                {
+                  id: "mock-team-id-2",
+                  name: "Team 2",
+                  key: "TEAM2",
+                },
+              ],
+            },
+          },
+        },
+      });
+    }
+
     if (query.includes("project(id:")) {
       return HttpResponse.json({
         data: {
