@@ -5,13 +5,13 @@ import { logger } from "../utils/logger.js";
 import { Issue, LinearError, InvalidInputLinearError } from "@linear/sdk";
 import { Result, ok, err } from "neverthrow";
 
-type CreateIssueError = 
+type CreateIssueError =
   | { type: "INVALID_INPUT"; message: string }
   | { type: "API_ERROR"; message: string }
   | { type: "NOT_FOUND"; message: string };
 
 export async function createIssue(
-  input: z.infer<typeof CreateIssueSchema>
+  input: z.infer<typeof CreateIssueSchema>,
 ): Promise<Result<Partial<Issue>, CreateIssueError>> {
   const client = getLinearClient();
   try {
@@ -21,19 +21,23 @@ export async function createIssue(
       description: input.description,
       projectId: input.projectId,
       estimate: input.estimate,
-      priority: input.priority === "high" ? 1 : input.priority === "medium" ? 2 : 3,
+      priority:
+        input.priority === "high" ? 1 : input.priority === "medium" ? 2 : 3,
     });
 
     const issuePayload = await newIssue.issue;
     if (!issuePayload) {
       logger.error("Issue not found after creation");
-      return err({ type: "NOT_FOUND", message: "Issue not found after creation" });
+      return err({
+        type: "NOT_FOUND",
+        message: "Issue not found after creation",
+      });
     }
 
-    logger.info("Created issue", { 
+    logger.info("Created issue", {
       issueId: issuePayload.id,
       title: input.title,
-      teamId: input.teamId 
+      teamId: input.teamId,
     });
 
     const issue = await client.issue(issuePayload.id);
@@ -53,10 +57,10 @@ export async function createIssue(
       logger.error("Linear API error", { error: error.message, input });
       return err({ type: "API_ERROR", message: error.message });
     }
-    logger.error("Unexpected error", { 
+    logger.error("Unexpected error", {
       error: error instanceof Error ? error.message : "Unknown error",
-      input 
+      input,
     });
     return err({ type: "API_ERROR", message: "Unexpected error occurred" });
   }
-} 
+}
