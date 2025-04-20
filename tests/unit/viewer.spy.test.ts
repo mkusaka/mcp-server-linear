@@ -23,18 +23,17 @@ describe("Viewer Resource Handlers with Spy", () => {
         resetLinearClient: vi.fn(),
       }));
 
-      const result = await getViewerResource(
-        {},
-        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
-      );
+      const result = await getViewerResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.isError).toBe(true);
       expect(result.content).toHaveLength(1);
       expect(result.content[0].type).toBe("text");
-      
+
       expect(consoleSpy).toHaveBeenCalled();
-      
+
       const contentItem = result.content[0];
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);

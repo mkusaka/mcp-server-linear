@@ -17,7 +17,7 @@ describe("Viewer Resource Handlers", () => {
         http.post("https://api.linear.app/graphql", async ({ request }) => {
           const body = await request.json();
           const { query } = body as { query: string };
-          
+
           return HttpResponse.json({
             data: {
               viewer: {
@@ -41,13 +41,12 @@ describe("Viewer Resource Handlers", () => {
               },
             },
           });
-        })
+        }),
       );
 
-      const result = await getViewerResource(
-        {},
-        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
-      );
+      const result = await getViewerResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
@@ -77,10 +76,9 @@ describe("Viewer Resource Handlers", () => {
         }),
       );
 
-      const result = await getViewerResource(
-        {},
-        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
-      );
+      const result = await getViewerResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.isError).toBe(true);

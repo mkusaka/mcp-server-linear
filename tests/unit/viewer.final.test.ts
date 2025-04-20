@@ -39,10 +39,9 @@ describe("Viewer Resource Handlers", () => {
 
   describe("getViewerResource", () => {
     it("should return viewer details", async () => {
-      const result = await getViewerResource(
-        {},
-        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
-      );
+      const result = await getViewerResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);

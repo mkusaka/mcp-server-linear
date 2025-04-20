@@ -18,10 +18,9 @@ describe("Viewer Resource Error Handlers", () => {
 
   describe("getViewerResource", () => {
     it("should handle API errors", async () => {
-      const result = await getViewerResource(
-        {},
-        { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
-      );
+      const result = await getViewerResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.isError).toBe(true);
