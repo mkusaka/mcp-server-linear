@@ -128,12 +128,12 @@ export const getIssueResource: ToolCallback<
     
     const stateData = await issue.state;
     
-    let comments: Array<{
+    let comments: {
       id: string;
       body: string;
       user: { id: string; name: string } | null;
       createdAt: Date;
-    }> = [];
+    }[] = [];
     if (args.includeComments) {
       const commentsData = await issue.comments({
         includeArchived: false,
@@ -155,7 +155,7 @@ export const getIssueResource: ToolCallback<
       );
     }
 
-    let children: Array<{
+    let children: {
       id: string;
       title: string;
       description: string | undefined;
@@ -163,7 +163,7 @@ export const getIssueResource: ToolCallback<
         type: any;
         name: any;
       };
-    }> = [];
+    }[] = [];
     if (args.includeChildren) {
       const childrenData = await issue.children();
       children = await Promise.all(
@@ -204,7 +204,6 @@ export const getIssueResource: ToolCallback<
       id: label.id,
       name: label.name,
       description: label.description,
-      color: label.color,
     }));
 
     return {

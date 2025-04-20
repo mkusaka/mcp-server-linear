@@ -90,8 +90,7 @@ export const handlers = [
                 {
                   id: "mock-label-id",
                   name: "Bug",
-                  description: "A bug that needs to be fixed",
-                  color: "#FF0000"
+                  description: "A bug that needs to be fixed"
                 }
               ]
             }
