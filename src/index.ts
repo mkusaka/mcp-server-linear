@@ -156,10 +156,10 @@ server.tool(
   updateIssueEstimateTool,
 );
 
-// Define update issue state tool
+// Define update issue status tool
 server.tool(
   "update_issue_state",
-  "Update the state of an existing issue in Linear",
+  "Update the status of an existing issue in Linear",
   UpdateIssueStateSchema.shape,
   updateIssueStateTool,
 );

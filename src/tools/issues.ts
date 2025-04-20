@@ -464,12 +464,12 @@ export const updateIssueStateTool: ToolCallback<
       content: [
         {
           type: "text" as const,
-          text: `Successfully updated issue state: ${issue.title} (${issue.url})`,
+          text: `Successfully updated issue status: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error("Failed to update issue state", {
+    logger.error("Failed to update issue status", {
       error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
