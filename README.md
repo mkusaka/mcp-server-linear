@@ -142,6 +142,26 @@ For development and testing, you can use the MCP Inspector to interact with the 
    LINEAR_API_KEY=your_api_key_here npx -y @modelcontextprotocol/inspector @mkusaka/mcp-server-linear
    ```
 
+#### Cursor Configuration
+
+Add the following to your Cursor configuration file (`~/.cursor/config.json`):
+
+```json
+{
+  "mcpServers": {
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "@mkusaka/mcp-server-linear"],
+      "env": {
+        "LINEAR_API_KEY": "your_linear_api_key"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
 #### Anthropic Claude Integration
 
 You can use this MCP server with Anthropic Claude through compatible clients like Cline or directly through the Claude API with MCP support.
