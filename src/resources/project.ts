@@ -21,25 +21,22 @@ export const getProjectsResource: ToolCallback<
     return {
       content: [
         {
-          type: "resource" as const,
-          resource: {
-            uri: "projects://list",
-            text: JSON.stringify(
-              {
-                projects: projects.nodes.map((project) => {
-                  return {
-                    id: project.id,
-                    name: project.name,
-                    description: project.description,
-                    state: project.state,
-                  };
-                }),
-              },
-              null,
-              2,
-            ),
-            mimeType: "application/json",
-          },
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              projects: projects.nodes.map((project) => {
+                return {
+                  id: project.id,
+                  name: project.name,
+                  description: project.description,
+                  state: project.state,
+                };
+              }),
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
         },
       ],
     };
@@ -113,24 +110,21 @@ export const getProjectResource: ToolCallback<
     return {
       content: [
         {
-          type: "resource" as const,
-          resource: {
-            uri: `projects://${args.projectId}`,
-            text: JSON.stringify(
-              {
-                project: {
-                  id: project.id,
-                  name: project.name,
-                  description: project.description,
-                  content: project.content,
-                  state: project.state,
-                },
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              project: {
+                id: project.id,
+                name: project.name,
+                description: project.description,
+                content: project.content,
+                state: project.state,
               },
-              null,
-              2,
-            ),
-            mimeType: "application/json",
-          },
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
         },
       ],
     };

@@ -29,10 +29,7 @@ describe("Resource Handlers", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(typeof data).toBe("object");
-      } else if (contentItem.type === "resource") {
-        const resource = contentItem.resource;
-        expect(resource.uri).toBe("issues://projects/mock-project-id/issues");
-        expect(typeof resource.text).toBe("string");
+        // expect(contentItem.mimeType).toBe("application/json");
       }
     });
   });
@@ -57,10 +54,7 @@ describe("Resource Handlers", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(typeof data).toBe("object");
-      } else if (contentItem.type === "resource") {
-        const resource = contentItem.resource;
-        expect(resource.uri).toBe("issues://mock-issue-id");
-        expect(typeof resource.text).toBe("string");
+        // expect(contentItem.mimeType).toBe("application/json");
       }
     });
   });
@@ -76,6 +70,8 @@ describe("Resource Handlers", () => {
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
+      expect(result.content[0].type).toBe("text");
+      // expect(result.content[0].mimeType).toBe("application/json");
     });
   });
 });
