@@ -16,9 +16,9 @@ vi.mock("../../src/utils/linear.js", () => {
   const mockStatusList = [
     { id: "state-123", name: "Todo" },
     { id: "status-1", name: "In Progress" },
-    { id: "status-2", name: "Done" }
+    { id: "status-2", name: "Done" },
   ];
-  
+
   return {
     issueStatusList: mockStatusList,
   };

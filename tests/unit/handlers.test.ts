@@ -47,7 +47,7 @@ vi.mock("../../src/utils/linear.js", () => {
   const mockStatusList = [
     { id: "state-123", name: "Todo" },
     { id: "status-1", name: "In Progress" },
-    { id: "status-2", name: "Done" }
+    { id: "status-2", name: "Done" },
   ];
 
   const mockLinearClient = {
@@ -79,13 +79,15 @@ vi.mock("../../src/utils/linear.js", () => {
       throw new Error("Issue not found");
     }),
     projectStatuses: vi.fn().mockResolvedValue({
-      nodes: mockStatusList
+      nodes: mockStatusList,
     }),
   };
 
   return {
     resetLinearClient: vi.fn(),
-    getLinearClient: vi.fn().mockImplementation(() => Promise.resolve(mockLinearClient)),
+    getLinearClient: vi
+      .fn()
+      .mockImplementation(() => Promise.resolve(mockLinearClient)),
     issueStatusList: mockStatusList,
   };
 });
