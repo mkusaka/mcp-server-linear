@@ -1,20 +1,19 @@
-import { InvalidInputLinearError, LinearError } from '@linear/sdk';
-import { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { GetProjectSchema, GetProjectsSchema } from '../schemas/issues.js';
-import { getLinearClient } from '../utils/linear.js';
-import { logger } from '../utils/logger.js';
+import { InvalidInputLinearError, LinearError } from "@linear/sdk";
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { GetProjectSchema, GetProjectsSchema } from "../schemas/issues.js";
+import { getLinearClient } from "../utils/linear.js";
+import { logger } from "../utils/logger.js";
 
-export const getProjectsResource: ToolCallback<typeof GetProjectsSchema.shape> = async (
-  args,
-  extra
-) => {
+export const getProjectsResource: ToolCallback<
+  typeof GetProjectsSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const projects = await client.projects({
       includeArchived: false,
       filter: {
         status: {
-          type: { nin: ['completed', 'canceled'] },
+          type: { nin: ["completed", "canceled"] },
         },
       },
     });
@@ -22,12 +21,12 @@ export const getProjectsResource: ToolCallback<typeof GetProjectsSchema.shape> =
     return {
       content: [
         {
-          type: 'resource' as const,
+          type: "resource" as const,
           resource: {
-            uri: 'projects://list',
+            uri: "projects://list",
             text: JSON.stringify(
               {
-                projects: projects.nodes.map(project => {
+                projects: projects.nodes.map((project) => {
                   return {
                     id: project.id,
                     name: project.name,
@@ -37,30 +36,30 @@ export const getProjectsResource: ToolCallback<typeof GetProjectsSchema.shape> =
                 }),
               },
               null,
-              2
+              2,
             ),
-            mimeType: 'application/json',
+            mimeType: "application/json",
           },
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get projects', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to get projects", {
+      error: error instanceof Error ? error.message : "Unknown error",
     });
 
     if (error instanceof InvalidInputLinearError) {
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Invalid input',
+                error: "Invalid input",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -71,14 +70,14 @@ export const getProjectsResource: ToolCallback<typeof GetProjectsSchema.shape> =
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Linear API error',
+                error: "Linear API error",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -88,14 +87,14 @@ export const getProjectsResource: ToolCallback<typeof GetProjectsSchema.shape> =
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: JSON.stringify(
             {
-              error: 'Unexpected error',
-              message: error instanceof Error ? error.message : 'Unknown error',
+              error: "Unexpected error",
+              message: error instanceof Error ? error.message : "Unknown error",
             },
             null,
-            2
+            2,
           ),
         },
       ],
@@ -104,10 +103,9 @@ export const getProjectsResource: ToolCallback<typeof GetProjectsSchema.shape> =
   }
 };
 
-export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = async (
-  args,
-  extra
-) => {
+export const getProjectResource: ToolCallback<
+  typeof GetProjectSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const project = await client.project(args.projectId as string);
@@ -115,7 +113,7 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
     return {
       content: [
         {
-          type: 'resource' as const,
+          type: "resource" as const,
           resource: {
             uri: `projects://${args.projectId}`,
             text: JSON.stringify(
@@ -129,16 +127,16 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
                 },
               },
               null,
-              2
+              2,
             ),
-            mimeType: 'application/json',
+            mimeType: "application/json",
           },
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get project', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to get project", {
+      error: error instanceof Error ? error.message : "Unknown error",
       projectId: args.projectId,
     });
 
@@ -146,14 +144,14 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Invalid input',
+                error: "Invalid input",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -164,14 +162,14 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Linear API error',
+                error: "Linear API error",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -181,14 +179,14 @@ export const getProjectResource: ToolCallback<typeof GetProjectSchema.shape> = a
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: JSON.stringify(
             {
-              error: 'Unexpected error',
-              message: error instanceof Error ? error.message : 'Unknown error',
+              error: "Unexpected error",
+              message: error instanceof Error ? error.message : "Unknown error",
             },
             null,
-            2
+            2,
           ),
         },
       ],

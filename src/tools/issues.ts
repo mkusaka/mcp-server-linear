@@ -1,5 +1,5 @@
-import { InvalidInputLinearError, LinearError } from '@linear/sdk';
-import { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { InvalidInputLinearError, LinearError } from "@linear/sdk";
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   CreateIssueSchema,
   DeleteIssueSchema,
@@ -8,14 +8,13 @@ import {
   UpdateIssuePrioritySchema,
   UpdateIssueSchema,
   UpdateIssueStateSchema,
-} from '../schemas/issues.js';
-import { getLinearClient } from '../utils/linear.js';
-import { logger } from '../utils/logger.js';
+} from "../schemas/issues.js";
+import { getLinearClient } from "../utils/linear.js";
+import { logger } from "../utils/logger.js";
 
-export const createIssueTool: ToolCallback<typeof CreateIssueSchema.shape> = async (
-  args,
-  extra
-) => {
+export const createIssueTool: ToolCallback<
+  typeof CreateIssueSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const newIssue = await client.createIssue({
@@ -24,24 +23,25 @@ export const createIssueTool: ToolCallback<typeof CreateIssueSchema.shape> = asy
       description: args.description,
       projectId: args.projectId,
       estimate: args.estimate,
-      priority: args.priority === 'high' ? 1 : args.priority === 'medium' ? 2 : 3,
+      priority:
+        args.priority === "high" ? 1 : args.priority === "medium" ? 2 : 3,
     });
 
     const issuePayload = await newIssue.issue;
     if (!issuePayload) {
-      logger.error('Issue not found after creation');
+      logger.error("Issue not found after creation");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found after creation',
+            type: "text" as const,
+            text: "Issue not found after creation",
           },
         ],
         isError: true,
       };
     }
 
-    logger.info('Created issue', {
+    logger.info("Created issue", {
       issueId: issuePayload.id,
       title: args.title,
       teamId: args.teamId,
@@ -51,18 +51,18 @@ export const createIssueTool: ToolCallback<typeof CreateIssueSchema.shape> = asy
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully created issue: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
     if (error instanceof InvalidInputLinearError) {
-      logger.error('Invalid input error', { error: error.message, args });
+      logger.error("Invalid input error", { error: error.message, args });
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: `Invalid input: ${error.message}`,
           },
         ],
@@ -70,26 +70,26 @@ export const createIssueTool: ToolCallback<typeof CreateIssueSchema.shape> = asy
       };
     }
     if (error instanceof LinearError) {
-      logger.error('Linear API error', { error: error.message, args });
+      logger.error("Linear API error", { error: error.message, args });
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: `API error: ${error.message}`,
           },
         ],
         isError: true,
       };
     }
-    logger.error('Unexpected error', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Unexpected error", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,
@@ -97,20 +97,19 @@ export const createIssueTool: ToolCallback<typeof CreateIssueSchema.shape> = asy
   }
 };
 
-export const updateIssueTool: ToolCallback<typeof UpdateIssueSchema.shape> = async (
-  args,
-  extra
-) => {
+export const updateIssueTool: ToolCallback<
+  typeof UpdateIssueSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
-      logger.error('Issue not found');
+      logger.error("Issue not found");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found',
+            type: "text" as const,
+            text: "Issue not found",
           },
         ],
         isError: true,
@@ -124,19 +123,19 @@ export const updateIssueTool: ToolCallback<typeof UpdateIssueSchema.shape> = asy
 
     const issuePayload = await updatedIssue.issue;
     if (!issuePayload) {
-      logger.error('Issue not found after update');
+      logger.error("Issue not found after update");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found after update',
+            type: "text" as const,
+            text: "Issue not found after update",
           },
         ],
         isError: true,
       };
     }
 
-    logger.info('Updated issue', {
+    logger.info("Updated issue", {
       issueId: issuePayload.id,
       title: args.title,
       description: args.description,
@@ -145,21 +144,21 @@ export const updateIssueTool: ToolCallback<typeof UpdateIssueSchema.shape> = asy
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully updated issue: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to update issue', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to update issue", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,
@@ -167,20 +166,19 @@ export const updateIssueTool: ToolCallback<typeof UpdateIssueSchema.shape> = asy
   }
 };
 
-export const deleteIssueTool: ToolCallback<typeof DeleteIssueSchema.shape> = async (
-  args,
-  extra
-) => {
+export const deleteIssueTool: ToolCallback<
+  typeof DeleteIssueSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
-      logger.error('Issue not found');
+      logger.error("Issue not found");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found',
+            type: "text" as const,
+            text: "Issue not found",
           },
         ],
         isError: true,
@@ -189,28 +187,28 @@ export const deleteIssueTool: ToolCallback<typeof DeleteIssueSchema.shape> = asy
 
     await issue.delete();
 
-    logger.info('Deleted issue', {
+    logger.info("Deleted issue", {
       issueId: args.issueId,
     });
 
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully deleted issue: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to delete issue', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to delete issue", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,
@@ -218,20 +216,19 @@ export const deleteIssueTool: ToolCallback<typeof DeleteIssueSchema.shape> = asy
   }
 };
 
-export const updateIssueLabelsTool: ToolCallback<typeof UpdateIssueLabelsSchema.shape> = async (
-  args,
-  extra
-) => {
+export const updateIssueLabelsTool: ToolCallback<
+  typeof UpdateIssueLabelsSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
-      logger.error('Issue not found');
+      logger.error("Issue not found");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found',
+            type: "text" as const,
+            text: "Issue not found",
           },
         ],
         isError: true,
@@ -244,19 +241,19 @@ export const updateIssueLabelsTool: ToolCallback<typeof UpdateIssueLabelsSchema.
 
     const issuePayload = await updatedIssue.issue;
     if (!issuePayload) {
-      logger.error('Issue not found after update');
+      logger.error("Issue not found after update");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found after update',
+            type: "text" as const,
+            text: "Issue not found after update",
           },
         ],
         isError: true,
       };
     }
 
-    logger.info('Updated issue labels', {
+    logger.info("Updated issue labels", {
       issueId: issuePayload.id,
       labels: args.labels,
     });
@@ -264,21 +261,21 @@ export const updateIssueLabelsTool: ToolCallback<typeof UpdateIssueLabelsSchema.
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully updated issue labels: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to update issue labels', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to update issue labels", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,
@@ -286,20 +283,19 @@ export const updateIssueLabelsTool: ToolCallback<typeof UpdateIssueLabelsSchema.
   }
 };
 
-export const updateIssuePriorityTool: ToolCallback<typeof UpdateIssuePrioritySchema.shape> = async (
-  args,
-  extra
-) => {
+export const updateIssuePriorityTool: ToolCallback<
+  typeof UpdateIssuePrioritySchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
-      logger.error('Issue not found');
+      logger.error("Issue not found");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found',
+            type: "text" as const,
+            text: "Issue not found",
           },
         ],
         isError: true,
@@ -307,24 +303,25 @@ export const updateIssuePriorityTool: ToolCallback<typeof UpdateIssuePrioritySch
     }
 
     const updatedIssue = await issue.update({
-      priority: args.priority === 'high' ? 1 : args.priority === 'medium' ? 2 : 3,
+      priority:
+        args.priority === "high" ? 1 : args.priority === "medium" ? 2 : 3,
     });
 
     const issuePayload = await updatedIssue.issue;
     if (!issuePayload) {
-      logger.error('Issue not found after update');
+      logger.error("Issue not found after update");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found after update',
+            type: "text" as const,
+            text: "Issue not found after update",
           },
         ],
         isError: true,
       };
     }
 
-    logger.info('Updated issue priority', {
+    logger.info("Updated issue priority", {
       issueId: issuePayload.id,
       priority: args.priority,
     });
@@ -332,21 +329,21 @@ export const updateIssuePriorityTool: ToolCallback<typeof UpdateIssuePrioritySch
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully updated issue priority: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to update issue priority', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to update issue priority", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,
@@ -354,20 +351,19 @@ export const updateIssuePriorityTool: ToolCallback<typeof UpdateIssuePrioritySch
   }
 };
 
-export const updateIssueEstimateTool: ToolCallback<typeof UpdateIssueEstimateSchema.shape> = async (
-  args,
-  extra
-) => {
+export const updateIssueEstimateTool: ToolCallback<
+  typeof UpdateIssueEstimateSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
-      logger.error('Issue not found');
+      logger.error("Issue not found");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found',
+            type: "text" as const,
+            text: "Issue not found",
           },
         ],
         isError: true,
@@ -380,19 +376,19 @@ export const updateIssueEstimateTool: ToolCallback<typeof UpdateIssueEstimateSch
 
     const issuePayload = await updatedIssue.issue;
     if (!issuePayload) {
-      logger.error('Issue not found after update');
+      logger.error("Issue not found after update");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found after update',
+            type: "text" as const,
+            text: "Issue not found after update",
           },
         ],
         isError: true,
       };
     }
 
-    logger.info('Updated issue estimate', {
+    logger.info("Updated issue estimate", {
       issueId: issuePayload.id,
       estimate: args.estimate,
     });
@@ -400,21 +396,21 @@ export const updateIssueEstimateTool: ToolCallback<typeof UpdateIssueEstimateSch
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully updated issue estimate: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to update issue estimate', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to update issue estimate", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,
@@ -422,20 +418,19 @@ export const updateIssueEstimateTool: ToolCallback<typeof UpdateIssueEstimateSch
   }
 };
 
-export const updateIssueStateTool: ToolCallback<typeof UpdateIssueStateSchema.shape> = async (
-  args,
-  extra
-) => {
+export const updateIssueStateTool: ToolCallback<
+  typeof UpdateIssueStateSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
-      logger.error('Issue not found');
+      logger.error("Issue not found");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found',
+            type: "text" as const,
+            text: "Issue not found",
           },
         ],
         isError: true,
@@ -448,19 +443,19 @@ export const updateIssueStateTool: ToolCallback<typeof UpdateIssueStateSchema.sh
 
     const issuePayload = await updatedIssue.issue;
     if (!issuePayload) {
-      logger.error('Issue not found after update');
+      logger.error("Issue not found after update");
       return {
         content: [
           {
-            type: 'text' as const,
-            text: 'Issue not found after update',
+            type: "text" as const,
+            text: "Issue not found after update",
           },
         ],
         isError: true,
       };
     }
 
-    logger.info('Updated issue state', {
+    logger.info("Updated issue state", {
       issueId: issuePayload.id,
       stateId: args.stateId,
     });
@@ -468,21 +463,21 @@ export const updateIssueStateTool: ToolCallback<typeof UpdateIssueStateSchema.sh
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: `Successfully updated issue state: ${issue.title} (${issue.url})`,
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to update issue state', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to update issue state", {
+      error: error instanceof Error ? error.message : "Unknown error",
       args,
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: 'Unexpected error occurred',
+          type: "text" as const,
+          text: "Unexpected error occurred",
         },
       ],
       isError: true,

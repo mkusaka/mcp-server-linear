@@ -1,12 +1,11 @@
-import { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { GetIssueLabelsSchema } from '../schemas/labels.js';
-import { getLinearClient } from '../utils/linear.js';
-import { logger } from '../utils/logger.js';
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { GetIssueLabelsSchema } from "../schemas/labels.js";
+import { getLinearClient } from "../utils/linear.js";
+import { logger } from "../utils/logger.js";
 
-export const getIssueLabelsResource: ToolCallback<typeof GetIssueLabelsSchema.shape> = async (
-  args,
-  extra
-) => {
+export const getIssueLabelsResource: ToolCallback<
+  typeof GetIssueLabelsSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
 
   try {
@@ -14,10 +13,10 @@ export const getIssueLabelsResource: ToolCallback<typeof GetIssueLabelsSchema.sh
     return {
       content: [
         {
-          type: 'text',
+          type: "text",
           text: JSON.stringify(
             {
-              labels: labels.nodes.map(l => ({
+              labels: labels.nodes.map((l) => ({
                 id: l.id,
                 name: l.name,
                 description: l.description,
@@ -25,19 +24,23 @@ export const getIssueLabelsResource: ToolCallback<typeof GetIssueLabelsSchema.sh
               })),
             },
             null,
-            2
+            2,
           ),
-          mimeType: 'application/json',
+          mimeType: "application/json",
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get issue labels', { error });
+    logger.error("Failed to get issue labels", { error });
     return {
       content: [
         {
-          type: 'text',
-          text: JSON.stringify({ error: 'Failed to get issue labels' }, null, 2),
+          type: "text",
+          text: JSON.stringify(
+            { error: "Failed to get issue labels" },
+            null,
+            2,
+          ),
         },
       ],
     };

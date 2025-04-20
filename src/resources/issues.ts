@@ -1,26 +1,25 @@
-import { InvalidInputLinearError, LinearError } from '@linear/sdk';
-import { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { getLinearClient } from '../utils/linear.js';
-import { logger } from '../utils/logger.js';
+import { InvalidInputLinearError, LinearError } from "@linear/sdk";
+import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { getLinearClient } from "../utils/linear.js";
+import { logger } from "../utils/logger.js";
 import {
   GetProjectIssuesSchema,
   GetIssueSchema,
   GetProjectStatusesSchema,
   GetIssuePrioritiesSchema,
-} from '../schemas/issues.js';
-import { LinearDocument } from '@linear/sdk';
+} from "../schemas/issues.js";
+import { LinearDocument } from "@linear/sdk";
 
-export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchema.shape> = async (
-  args,
-  extra
-) => {
+export const getProjectIssuesResource: ToolCallback<
+  typeof GetProjectIssuesSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const project = await client.project(args.projectId as string);
     const issues = await project.issues({
       filter: {
         state: {
-          type: { nin: ['completed', 'canceled'] },
+          type: { nin: ["completed", "canceled"] },
         },
       },
       orderBy: LinearDocument.PaginationOrderBy.UpdatedAt,
@@ -30,7 +29,7 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
     return {
       content: [
         {
-          type: 'resource' as const,
+          type: "resource" as const,
           resource: {
             uri: `issues://projects/${args.projectId}/issues`,
             text: JSON.stringify(
@@ -41,7 +40,7 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
                   description: project.description,
                   state: project.state,
                 },
-                issues: issues.nodes.map(issue => ({
+                issues: issues.nodes.map((issue) => ({
                   id: issue.id,
                   title: issue.title,
                   description: issue.description,
@@ -52,16 +51,16 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
                 })),
               },
               null,
-              2
+              2,
             ),
-            mimeType: 'application/json',
+            mimeType: "application/json",
           },
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get project issues', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to get project issues", {
+      error: error instanceof Error ? error.message : "Unknown error",
       projectId: args.projectId,
     });
 
@@ -69,14 +68,14 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Invalid input',
+                error: "Invalid input",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -87,14 +86,14 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Linear API error',
+                error: "Linear API error",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -104,14 +103,14 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: JSON.stringify(
             {
-              error: 'Unexpected error',
-              message: error instanceof Error ? error.message : 'Unknown error',
+              error: "Unexpected error",
+              message: error instanceof Error ? error.message : "Unknown error",
             },
             null,
-            2
+            2,
           ),
         },
       ],
@@ -120,7 +119,9 @@ export const getProjectIssuesResource: ToolCallback<typeof GetProjectIssuesSchem
   }
 };
 
-export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async (args, extra) => {
+export const getIssueResource: ToolCallback<
+  typeof GetIssueSchema.shape
+> = async (args, extra) => {
   const client = getLinearClient();
   try {
     const issue = await client.issue(args.issueId as string);
@@ -133,7 +134,7 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
         orderBy: LinearDocument.PaginationOrderBy.CreatedAt,
       });
       return await Promise.all(
-        comments.nodes.map(async comment => ({
+        comments.nodes.map(async (comment) => ({
           id: comment.id,
           body: comment.body,
           user: await (async () => {
@@ -147,7 +148,7 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
             };
           })(),
           createdAt: comment.createdAt,
-        }))
+        })),
       );
     })();
 
@@ -156,7 +157,7 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
         return [];
       }
       const children = await issue.children();
-      return children.nodes.map(child => {
+      return children.nodes.map((child) => {
         return {
           id: child.id,
           title: child.title,
@@ -190,7 +191,7 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
     return {
       content: [
         {
-          type: 'resource' as const,
+          type: "resource" as const,
           resource: {
             uri: `issues://${args.issueId}`,
             text: JSON.stringify(
@@ -209,16 +210,16 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
                 },
               },
               null,
-              2
+              2,
             ),
-            mimeType: 'application/json',
+            mimeType: "application/json",
           },
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get issue', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to get issue", {
+      error: error instanceof Error ? error.message : "Unknown error",
       issueId: args.issueId,
     });
 
@@ -226,14 +227,14 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Invalid input',
+                error: "Invalid input",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -244,14 +245,14 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
       return {
         content: [
           {
-            type: 'text' as const,
+            type: "text" as const,
             text: JSON.stringify(
               {
-                error: 'Linear API error',
+                error: "Linear API error",
                 message: error.message,
               },
               null,
-              2
+              2,
             ),
           },
         ],
@@ -261,14 +262,14 @@ export const getIssueResource: ToolCallback<typeof GetIssueSchema.shape> = async
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: JSON.stringify(
             {
-              error: 'Unexpected error',
-              message: error instanceof Error ? error.message : 'Unknown error',
+              error: "Unexpected error",
+              message: error instanceof Error ? error.message : "Unknown error",
             },
             null,
-            2
+            2,
           ),
         },
       ],
@@ -286,10 +287,10 @@ export const getProjectStatusesResource: ToolCallback<
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: JSON.stringify(
             {
-              statuses: statuses.nodes.map(s => ({
+              statuses: statuses.nodes.map((s) => ({
                 id: s.id,
                 name: s.name,
                 description: s.description,
@@ -297,21 +298,25 @@ export const getProjectStatusesResource: ToolCallback<
               })),
             },
             null,
-            2
+            2,
           ),
-          mimeType: 'application/json',
+          mimeType: "application/json",
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get project statuses', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to get project statuses", {
+      error: error instanceof Error ? error.message : "Unknown error",
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: JSON.stringify({ error: 'Failed to get project statuses' }, null, 2),
+          type: "text" as const,
+          text: JSON.stringify(
+            { error: "Failed to get project statuses" },
+            null,
+            2,
+          ),
         },
       ],
     };
@@ -327,30 +332,34 @@ export const getIssuePrioritiesResource: ToolCallback<
     return {
       content: [
         {
-          type: 'text' as const,
+          type: "text" as const,
           text: JSON.stringify(
             {
-              priorities: priorities.map(p => ({
+              priorities: priorities.map((p) => ({
                 label: p.label,
                 priority: p.priority,
               })),
             },
             null,
-            2
+            2,
           ),
-          mimeType: 'application/json',
+          mimeType: "application/json",
         },
       ],
     };
   } catch (error) {
-    logger.error('Failed to get issue priorities', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error("Failed to get issue priorities", {
+      error: error instanceof Error ? error.message : "Unknown error",
     });
     return {
       content: [
         {
-          type: 'text' as const,
-          text: JSON.stringify({ error: 'Failed to get issue priorities' }, null, 2),
+          type: "text" as const,
+          text: JSON.stringify(
+            { error: "Failed to get issue priorities" },
+            null,
+            2,
+          ),
         },
       ],
     };
