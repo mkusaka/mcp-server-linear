@@ -5,7 +5,7 @@ import { resetLinearClient } from '../../src/utils/linear.js';
 
 describe('Resource Handlers', () => {
   beforeEach(() => {
-    process.env.LINEAR_API_KEY = 'test-api-key';
+    process.env.LINEAR_API_KEY = 'mock-api-key';
     resetLinearClient();
   });
 
@@ -13,7 +13,7 @@ describe('Resource Handlers', () => {
     it('should return project issues', async () => {
       const result = await getProjectIssuesResource({
         projectId: 'mock-project-id'
-      }, { auth: { apiKey: 'test-api-key' } } as any);
+      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
@@ -38,7 +38,7 @@ describe('Resource Handlers', () => {
         includeComments: true,
         includeChildren: true,
         includeParent: true
-      }, { auth: { apiKey: 'test-api-key' } } as any);
+      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
@@ -60,7 +60,7 @@ describe('Resource Handlers', () => {
     it('should return project details', async () => {
       const result = await getProjectResource({
         projectId: 'mock-project-id'
-      }, { auth: { apiKey: 'test-api-key' } } as any);
+      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);

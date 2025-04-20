@@ -4,7 +4,7 @@ import { resetLinearClient } from '../../src/utils/linear.js';
 
 describe('Tool Handlers', () => {
   beforeEach(() => {
-    process.env.LINEAR_API_KEY = 'test-api-key';
+    process.env.LINEAR_API_KEY = 'mock-api-key';
     resetLinearClient();
     
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -16,7 +16,7 @@ describe('Tool Handlers', () => {
         title: 'Test Issue',
         description: 'Test Description',
         teamId: 'test-team-id'
-      }, { auth: { apiKey: 'test-api-key' } } as any);
+      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
@@ -32,7 +32,7 @@ describe('Tool Handlers', () => {
         issueId: 'mock-issue-id',
         title: 'Updated Test Issue',
         description: 'Updated Test Description'
-      }, { auth: { apiKey: 'test-api-key' } } as any);
+      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
@@ -46,7 +46,7 @@ describe('Tool Handlers', () => {
     it('should attempt to delete an existing issue', async () => {
       const result = await deleteIssueTool({
         issueId: 'mock-issue-id'
-      }, { auth: { apiKey: 'test-api-key' } } as any);
+      }, { auth: { apiKey: process.env.LINEAR_API_KEY } } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
