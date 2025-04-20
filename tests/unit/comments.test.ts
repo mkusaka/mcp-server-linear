@@ -5,24 +5,6 @@ import {
   updateCommentTool,
   deleteCommentTool,
 } from "../../src/tools/comments.js";
-vi.mock("@linear/sdk", () => {
-  return {
-    LinearError: class LinearError extends Error {
-      constructor(options) {
-        super(typeof options === "object" ? options.message : options);
-        this.name = "LinearError";
-      }
-    },
-    InvalidInputLinearError: class InvalidInputLinearError extends Error {
-      constructor(message) {
-        super(message);
-        this.name = "InvalidInputLinearError";
-      }
-    },
-  };
-});
-
-import { LinearError, InvalidInputLinearError } from "@linear/sdk";
 
 // Mock the Linear client
 vi.mock("../../src/utils/linear.js", () => {
