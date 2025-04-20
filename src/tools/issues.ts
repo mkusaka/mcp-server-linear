@@ -455,9 +455,9 @@ export const updateIssueStateTool: ToolCallback<
       };
     }
 
-    logger.info("Updated issue state", {
+    logger.info("Updated issue status", {
       issueId: issuePayload.id,
-      stateId: args.status,
+      status: args.status,
     });
 
     return {
