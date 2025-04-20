@@ -1,74 +1,114 @@
-import { http } from 'msw'
-
-const mockIssues = {
-  nodes: [
-    {
-      id: 'test-issue-1',
-      title: 'Test Issue 1',
-      description: 'Test Description 1',
-      state: { name: 'Todo' }
-    },
-    {
-      id: 'test-issue-2',
-      title: 'Test Issue 2',
-      description: 'Test Description 2',
-      state: { name: 'In Progress' }
-    }
-  ]
-}
+import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.post('https://api.linear.app/graphql', async ({ request }) => {
-    const { query, variables } = await request.json()
+  http.get('https://api.linear.app/graphql', () => {
+    return HttpResponse.json({ data: { viewer: { id: 'mock-user-id', name: 'Mock User' } } });
+  }),
 
-    // Project Query
+  http.post('https://api.linear.app/graphql', async ({ request }) => {
+    const body = await request.json();
+    const { query, variables } = body as { query: string; variables: Record<string, any> };
+
     if (query.includes('project(id:')) {
-      return Response.json({
+      return HttpResponse.json({
         data: {
           project: {
-            id: variables.id || 'test-project-id',
-            name: 'Test Project',
-            issues: mockIssues
-          }
-        }
-      })
-    }
-
-    // Initiative Query
-    if (query.includes('initiative(id:')) {
-      return Response.json({
-        data: {
-          initiative: {
-            id: variables.id || 'test-initiative-id',
-            name: 'Test Initiative',
-            projects: {
+            id: variables.id || 'mock-project-id',
+            name: 'Mock Project',
+            description: 'Mock Project Description',
+            state: 'started',
+            issues: {
               nodes: [
                 {
-                  id: 'test-project-1',
-                  name: 'Test Project 1',
-                  issues: mockIssues
+                  id: 'mock-issue-1',
+                  title: 'Mock Issue 1',
+                  description: 'Mock Issue 1 Description',
+                  state: { name: 'Todo' },
+                },
+                {
+                  id: 'mock-issue-2',
+                  title: 'Mock Issue 2',
+                  description: 'Mock Issue 2 Description',
+                  state: { name: 'In Progress' },
                 }
               ]
             }
           }
         }
-      })
+      });
     }
 
-    // Issue Query
     if (query.includes('issue(id:')) {
-      return Response.json({
+      return HttpResponse.json({
         data: {
           issue: {
-            id: variables.id || 'test-issue-id',
-            title: 'Test Issue',
-            description: 'Test Description',
-            state: { name: 'Todo' }
+            id: variables.id || 'mock-issue-id',
+            title: 'Mock Issue',
+            description: 'Mock Issue Description',
+            state: { name: 'Todo' },
+            comments: {
+              nodes: []
+            },
+            children: {
+              nodes: []
+            },
+            parent: null,
+            url: 'https://linear.app/team/issue/MOCK-123'
           }
         }
-      })
+      });
     }
 
-    return Response.error()
+    if (query.includes('mutation') && query.includes('issueCreate')) {
+      return HttpResponse.json({
+        data: {
+          issueCreate: {
+            success: true,
+            issue: {
+              id: 'new-mock-issue-id',
+              title: variables.input?.title || 'New Mock Issue',
+              description: variables.input?.description || 'New Mock Description',
+              url: 'https://linear.app/team/issue/MOCK-123',
+              state: { name: 'Todo' }
+            }
+          }
+        }
+      });
+    }
+
+    if (query.includes('mutation') && query.includes('issueUpdate')) {
+      return HttpResponse.json({
+        data: {
+          issueUpdate: {
+            success: true,
+            issue: {
+              id: variables.id || 'mock-issue-id',
+              title: variables.input?.title || 'Updated Mock Issue',
+              description: variables.input?.description || 'Updated Mock Description',
+              url: 'https://linear.app/team/issue/MOCK-123',
+              state: { name: 'Todo' }
+            }
+          }
+        }
+      });
+    }
+
+    if (query.includes('mutation') && query.includes('issueDelete')) {
+      return HttpResponse.json({
+        data: {
+          issueDelete: {
+            success: true,
+            issue: {
+              id: variables.id || 'mock-issue-id'
+            }
+          }
+        }
+      });
+    }
+
+    return HttpResponse.json({
+      data: null,
+      errors: [{ message: 'Not implemented in mock' }]
+    }, { status: 200 });
   })
-] 
+];
