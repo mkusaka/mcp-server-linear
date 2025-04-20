@@ -18,9 +18,9 @@ export const logger = winston.createLogger({
   ),
   transports: isDebugMode
     ? [
-        new winston.transports.File({ 
-          filename: getLogFile(), 
-          level: "info" 
+        new winston.transports.File({
+          filename: getLogFile(),
+          level: "info",
         }),
       ]
     : [], // No transports when debug mode is disabled
