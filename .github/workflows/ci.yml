@@ -65,5 +65,4 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: davelosert/vitest-coverage-report-action@v2
         with:
-          file-coverage: true
-          show-all-files: true
+          file-coverage-mode: "all"
