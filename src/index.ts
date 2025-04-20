@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { Command } from "commander";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
@@ -52,7 +53,7 @@ import {
   updateIssueTool,
 } from "./tools/issues.js";
 import { searchIssuesTool } from "./tools/searchIssues.js";
-import { logger } from "./utils/logger.js";
+import { logger, configureLogger } from "./utils/logger.js";
 
 const server = new McpServer({
   name: "linear-mcp-server",
@@ -210,6 +211,20 @@ server.tool(
   SearchIssuesSchema.shape,
   searchIssuesTool,
 );
+
+const program = new Command()
+  .name("mcp-server-linear")
+  .description("MCP server for using the Linear API")
+  .version("1.0.0")
+  .option("--debug", "Enable debug mode with logging")
+  .option("--log-file <path>", "Specify log file path", "linear-mcp.log");
+
+program.parse();
+
+configureLogger({
+  debug: program.opts().debug,
+  logFile: program.opts().logFile,
+});
 
 async function runServer() {
   logger.info("Starting Linear MCP Server", {

@@ -1,16 +1,35 @@
 import winston from "winston";
 
+interface LoggerConfig {
+  debug?: boolean;
+  logFile?: string;
+}
+
+const defaultConfig: LoggerConfig = {
+  debug: false,
+  logFile: "linear-mcp.log",
+};
+
 export const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.json(),
   ),
-  transports: [
-    // new winston.transports.Stream({
-    //   stream: process.stderr,
-    //   level: "info"
-    // }),
-    new winston.transports.File({ filename: "linear-mcp.log", level: "info" }),
-  ],
+  transports: [], // No transports by default
 });
+
+export function configureLogger(config: LoggerConfig = {}): void {
+  const { debug, logFile } = { ...defaultConfig, ...config };
+
+  logger.clear();
+
+  if (debug) {
+    logger.add(
+      new winston.transports.File({
+        filename: logFile,
+        level: "info",
+      }),
+    );
+  }
+}
