@@ -78,7 +78,18 @@ export const handlers = [
             description: "Mock Issue Description",
             state: { name: "Todo" },
             comments: {
-              nodes: [],
+              nodes: [
+                {
+                  id: "mock-comment-id-1",
+                  body: "Mock comment 1",
+                  createdAt: "2023-01-01T00:00:00Z",
+                  updatedAt: "2023-01-01T00:00:00Z",
+                  user: {
+                    id: "mock-user-id",
+                    name: "Mock User",
+                  },
+                },
+              ],
             },
             children: {
               nodes: [],
@@ -134,6 +145,56 @@ export const handlers = [
             issue: {
               id: variables.id || "mock-issue-id",
             },
+          },
+        },
+      });
+    }
+
+    if (query.includes("mutation") && query.includes("commentCreate")) {
+      return HttpResponse.json({
+        data: {
+          commentCreate: {
+            success: true,
+            comment: {
+              id: "new-mock-comment-id",
+              body: variables.input?.body || "New mock comment",
+              createdAt: "2023-01-01T00:00:00Z",
+              updatedAt: "2023-01-01T00:00:00Z",
+              user: {
+                id: "mock-user-id",
+                name: "Mock User",
+              },
+            },
+          },
+        },
+      });
+    }
+
+    if (query.includes("mutation") && query.includes("commentUpdate")) {
+      return HttpResponse.json({
+        data: {
+          commentUpdate: {
+            success: true,
+            comment: {
+              id: variables.id || "mock-comment-id",
+              body: variables.input?.body || "Updated mock comment",
+              createdAt: "2023-01-01T00:00:00Z",
+              updatedAt: "2023-01-01T00:00:00Z",
+              user: {
+                id: "mock-user-id",
+                name: "Mock User",
+              },
+            },
+          },
+        },
+      });
+    }
+
+    if (query.includes("mutation") && query.includes("commentDelete")) {
+      return HttpResponse.json({
+        data: {
+          commentDelete: {
+            success: true,
           },
         },
       });
