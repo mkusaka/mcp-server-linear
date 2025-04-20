@@ -48,7 +48,11 @@ npm run build
 
 ### Linear API Authentication
 
-This server requires a Linear API key to authenticate with the Linear API. You need to set up the `LINEAR_API_KEY` environment variable:
+This server supports two authentication methods:
+
+#### Option 1: API Key Authentication
+
+You can set up the `LINEAR_API_KEY` environment variable:
 
 1. Go to [Linear Settings > API](https://linear.app/settings/api)
 2. Under "Personal API keys", click "Create key"
@@ -60,7 +64,22 @@ This server requires a Linear API key to authenticate with the Linear API. You n
 LINEAR_API_KEY=your_api_key_here npm run debug
 ```
 
-Alternatively, you can set the environment variable in your shell profile or use a tool like `dotenv`.
+#### Option 2: OAuth Authentication
+
+Alternatively, you can use OAuth authentication by setting the following environment variables:
+
+1. Create an OAuth application at [Linear Settings > API > Applications](https://linear.app/settings/api/applications)
+2. Configure your application and obtain the client ID and client secret
+3. Set the following environment variables:
+
+```bash
+LINEAR_OAUTH_CLIENT_ID=your_oauth_client_id
+LINEAR_OAUTH_CLIENT_SECRET=your_oauth_client_secret
+```
+
+If both authentication methods are configured, OAuth authentication will be prioritized.
+
+Alternatively, you can set the environment variables in your shell profile or use a tool like `dotenv`.
 
 ## Usage
 
@@ -94,6 +113,9 @@ npm run debug
          "args": ["/path/to/mcp-server-linear/dist/index.js"],
          "env": {
            "LINEAR_API_KEY": "your_linear_api_key"
+           // または OAuth認証を使用する場合
+           // "LINEAR_OAUTH_CLIENT_ID": "your_oauth_client_id",
+           // "LINEAR_OAUTH_CLIENT_SECRET": "your_oauth_client_secret"
          },
          "disabled": false,
          "autoApprove": []
@@ -162,6 +184,9 @@ Add the following to your Cursor configuration file (`~/.cursor/config.json`):
       "args": ["-y", "@mkusaka/mcp-server-linear"],
       "env": {
         "LINEAR_API_KEY": "your_linear_api_key"
+        // または OAuth認証を使用する場合
+        // "LINEAR_OAUTH_CLIENT_ID": "your_oauth_client_id",
+        // "LINEAR_OAUTH_CLIENT_SECRET": "your_oauth_client_secret"
       },
       "disabled": false,
       "autoApprove": []
