@@ -15,6 +15,21 @@ Key features:
 
 ## Installation
 
+### From npm package
+
+```bash
+# Install from npm
+npm install @U06CKH0PYQP/mcp-server-linear
+
+# Or using yarn
+yarn add @U06CKH0PYQP/mcp-server-linear
+
+# Or using pnpm
+pnpm add @U06CKH0PYQP/mcp-server-linear
+```
+
+### From source
+
 ```bash
 # Clone the repository
 git clone https://github.com/mkusaka/mcp-server-linear.git
