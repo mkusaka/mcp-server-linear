@@ -6,6 +6,7 @@ import {
   deleteCommentTool,
 } from "../../src/tools/comments.js";
 import * as linearUtils from "../../src/utils/linear.js";
+import { LinearError, InvalidInputLinearError } from "@linear/sdk";
 
 // Mock the Linear client
 vi.mock("../../src/utils/linear.js", () => {
@@ -128,10 +129,10 @@ describe("Comment Tools", () => {
     });
 
     it("should handle API errors", async () => {
-      // Use a simple Error for testing error handling
+      // Use LinearError for testing error handling
       const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
       mockGetLinearClient.mockImplementationOnce(() => {
-        throw new Error("API error");
+        throw new LinearError({ message: "API error" });
       });
 
       const result = await getIssueCommentsResource(
@@ -169,10 +170,10 @@ describe("Comment Tools", () => {
     });
 
     it("should handle API errors", async () => {
-      // Use a simple Error for testing error handling
+      // Use LinearError for testing error handling
       const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
       mockGetLinearClient.mockImplementationOnce(() => {
-        throw new Error("API error");
+        throw new LinearError({ message: "API error" });
       });
 
       const result = await createCommentTool(
@@ -191,7 +192,7 @@ describe("Comment Tools", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Unexpected error");
+        expect(data.error).toBe("Linear API error");
       }
     });
   });
@@ -213,10 +214,10 @@ describe("Comment Tools", () => {
     });
 
     it("should handle API errors", async () => {
-      // Use a simple Error for testing error handling
+      // Use LinearError for testing error handling
       const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
       mockGetLinearClient.mockImplementationOnce(() => {
-        throw new Error("API error");
+        throw new LinearError({ message: "API error" });
       });
 
       const result = await updateCommentTool(
@@ -235,7 +236,7 @@ describe("Comment Tools", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Unexpected error");
+        expect(data.error).toBe("Linear API error");
       }
     });
   });
@@ -256,10 +257,10 @@ describe("Comment Tools", () => {
     });
 
     it("should handle API errors", async () => {
-      // Use a simple Error for testing error handling
+      // Use LinearError for testing error handling
       const mockGetLinearClient = vi.spyOn(linearUtils, "getLinearClient");
       mockGetLinearClient.mockImplementationOnce(() => {
-        throw new Error("API error");
+        throw new LinearError({ message: "API error" });
       });
 
       const result = await deleteCommentTool(
@@ -277,7 +278,7 @@ describe("Comment Tools", () => {
       if (contentItem.type === "text") {
         const data = JSON.parse(contentItem.text);
         expect(data).toHaveProperty("error");
-        expect(data.error).toBe("Unexpected error");
+        expect(data.error).toBe("Linear API error");
       }
     });
   });
