@@ -7,7 +7,7 @@ import { logger } from "../utils/logger.js";
 export const getProjectsResource: ToolCallback<
   typeof GetProjectsSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const projects = await client.projects({
       includeArchived: false,
@@ -106,7 +106,7 @@ export const getProjectsResource: ToolCallback<
 export const getProjectResource: ToolCallback<
   typeof GetProjectSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const project = await client.project(args.projectId as string);
 

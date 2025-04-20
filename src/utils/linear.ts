@@ -2,8 +2,9 @@ import { LinearClient } from "@linear/sdk";
 import { logger } from "./logger.js";
 
 let client: LinearClient | null = null;
+export let issueStatusList: { id: string; name: string }[] = [];
 
-export function getLinearClient(): LinearClient {
+export async function getLinearClient(): Promise<LinearClient> {
   if (!client) {
     const apiKey = process.env.LINEAR_API_KEY;
     const clientId = process.env.LINEAR_OAUTH_CLIENT_ID;
@@ -27,6 +28,11 @@ export function getLinearClient(): LinearClient {
       );
     }
   }
+  const statuses = await client.projectStatuses();
+  issueStatusList = statuses.nodes.map((status) => ({
+    id: status.id,
+    name: status.name,
+  }));
   return client;
 }
 

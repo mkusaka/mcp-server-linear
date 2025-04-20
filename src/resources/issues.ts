@@ -13,7 +13,7 @@ import { LinearDocument } from "@linear/sdk";
 export const getProjectIssuesResource: ToolCallback<
   typeof GetProjectIssuesSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const project = await client.project(args.projectId as string);
     const issues = await project.issues({
@@ -44,6 +44,7 @@ export const getProjectIssuesResource: ToolCallback<
                   id: issue.id,
                   title: issue.title,
                   description: issue.description,
+                  identifier: issue.identifier,
                   state: {
                     type: issue.state,
                     name: issue.state,
@@ -122,7 +123,7 @@ export const getProjectIssuesResource: ToolCallback<
 export const getIssueResource: ToolCallback<
   typeof GetIssueSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId as string);
 
@@ -220,6 +221,7 @@ export const getIssueResource: ToolCallback<
                   id: issue.id,
                   title: issue.title,
                   description: issue.description,
+                  identifier: issue.identifier,
                   state: {
                     type: stateData,
                     name: stateData,
@@ -302,7 +304,7 @@ export const getIssueResource: ToolCallback<
 export const getIssueStatusListResource: ToolCallback<
   typeof GetIssueStatusListSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const statuses = await client.projectStatuses();
     return {
@@ -347,7 +349,7 @@ export const getIssueStatusListResource: ToolCallback<
 export const getIssuePrioritiesResource: ToolCallback<
   typeof GetIssuePrioritiesSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const priorities = await client.issuePriorityValues;
     return {

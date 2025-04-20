@@ -6,7 +6,7 @@ import { logger } from "../utils/logger.js";
 export const getIssueLabelsResource: ToolCallback<
   typeof GetIssueLabelsSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
 
   try {
     const labels = await client.issueLabels();

@@ -13,7 +13,7 @@ import {
 export const getIssueCommentsResource: ToolCallback<
   typeof GetIssueCommentsSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const comments = await (await client.issue(args.issueId)).comments();
 
@@ -79,7 +79,7 @@ export const getIssueCommentsResource: ToolCallback<
 export const createCommentTool: ToolCallback<
   typeof CreateCommentSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const newComment = await client.createComment({
       issueId: args.issueId,
@@ -178,7 +178,7 @@ export const createCommentTool: ToolCallback<
 export const updateCommentTool: ToolCallback<
   typeof UpdateCommentSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const updatedComment = await client.updateComment(args.commentId, {
       body: args.body,
@@ -276,7 +276,7 @@ export const updateCommentTool: ToolCallback<
 export const deleteCommentTool: ToolCallback<
   typeof DeleteCommentSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     await client.deleteComment(args.commentId);
 

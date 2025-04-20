@@ -76,7 +76,7 @@ vi.mock("../../src/utils/linear.js", () => {
 
   return {
     resetLinearClient: vi.fn(),
-    getLinearClient: vi.fn(() => mockLinearClient),
+    getLinearClient: vi.fn().mockResolvedValue(mockLinearClient),
   };
 });
 
@@ -119,7 +119,7 @@ describe("Issue Handlers", () => {
 
       // Verify Linear client was called with correct parameters
       const { getLinearClient } = await import("../../src/utils/linear.js");
-      const mockClient = getLinearClient();
+      const mockClient = await getLinearClient();
       expect(mockClient.createIssue).toHaveBeenCalledWith({
         teamId: "test-team-id",
         title: "Test Issue",
@@ -138,7 +138,7 @@ describe("Issue Handlers", () => {
       };
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
-      const mockClient = getLinearClient();
+      const mockClient = await getLinearClient();
       const { LinearError } = await import("@linear/sdk");
       mockClient.createIssue = vi.fn().mockImplementation(() => {
         throw new LinearError("API Error");
@@ -171,7 +171,7 @@ describe("Issue Handlers", () => {
       };
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
-      const mockClient = getLinearClient();
+      const mockClient = await getLinearClient();
       const { InvalidInputLinearError } = await import("@linear/sdk");
       mockClient.createIssue = vi.fn().mockImplementation(() => {
         throw new InvalidInputLinearError("Invalid input");
@@ -204,7 +204,7 @@ describe("Issue Handlers", () => {
       };
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
-      const mockClient = getLinearClient();
+      const mockClient = await getLinearClient();
       mockClient.createIssue = vi
         .fn()
         .mockRejectedValue(new Error("Unexpected error"));
@@ -236,7 +236,7 @@ describe("Issue Handlers", () => {
       };
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
-      const mockClient = getLinearClient();
+      const mockClient = await getLinearClient();
       mockClient.createIssue = vi.fn().mockResolvedValue({
         issue: null,
       });

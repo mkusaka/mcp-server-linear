@@ -7,7 +7,7 @@ import { logger } from "../utils/logger.js";
 export const getViewerResource: ToolCallback<
   typeof GetViewerSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const viewer = await client.viewer;
     const teams = await viewer.teams();

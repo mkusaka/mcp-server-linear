@@ -15,7 +15,7 @@ import { logger } from "../utils/logger.js";
 export const createIssueTool: ToolCallback<
   typeof CreateIssueSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const newIssue = await client.createIssue({
       teamId: args.teamId,
@@ -100,7 +100,7 @@ export const createIssueTool: ToolCallback<
 export const updateIssueTool: ToolCallback<
   typeof UpdateIssueSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
@@ -169,7 +169,7 @@ export const updateIssueTool: ToolCallback<
 export const deleteIssueTool: ToolCallback<
   typeof DeleteIssueSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
@@ -219,7 +219,7 @@ export const deleteIssueTool: ToolCallback<
 export const updateIssueLabelsTool: ToolCallback<
   typeof UpdateIssueLabelsSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
@@ -286,7 +286,7 @@ export const updateIssueLabelsTool: ToolCallback<
 export const updateIssuePriorityTool: ToolCallback<
   typeof UpdateIssuePrioritySchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
@@ -354,7 +354,7 @@ export const updateIssuePriorityTool: ToolCallback<
 export const updateIssueEstimateTool: ToolCallback<
   typeof UpdateIssueEstimateSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
@@ -421,7 +421,7 @@ export const updateIssueEstimateTool: ToolCallback<
 export const updateIssueStateTool: ToolCallback<
   typeof UpdateIssueStateSchema.shape
 > = async (args, extra) => {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const issue = await client.issue(args.issueId);
     if (!issue) {
@@ -438,7 +438,7 @@ export const updateIssueStateTool: ToolCallback<
     }
 
     const updatedIssue = await issue.update({
-      stateId: args.stateId,
+      stateId: args.state,
     });
 
     const issuePayload = await updatedIssue.issue;
@@ -457,7 +457,7 @@ export const updateIssueStateTool: ToolCallback<
 
     logger.info("Updated issue state", {
       issueId: issuePayload.id,
-      stateId: args.stateId,
+      stateId: args.state,
     });
 
     return {

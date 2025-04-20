@@ -112,10 +112,12 @@ export const UpdateIssueEstimateSchema = z.object({
   estimate: z.number().optional().describe("issue estimate"),
 });
 
+import { issueStatusList } from "../utils/linear";
+
 export const UpdateIssueStateSchema = z.object({
   issueId: z
     .string()
     .min(1, "issue id is required")
     .describe("target issue id"),
-  stateId: z.string().min(1, "state id is required").describe("issue state id"),
+  state: z.nativeEnum(Object.fromEntries(issueStatusList.map(s => [s, s]))).describe("issue state name"),
 });

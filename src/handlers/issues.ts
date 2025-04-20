@@ -13,7 +13,7 @@ type CreateIssueError =
 export async function createIssue(
   input: z.infer<typeof CreateIssueSchema>,
 ): Promise<Result<Partial<Issue>, CreateIssueError>> {
-  const client = getLinearClient();
+  const client = await getLinearClient();
   try {
     const newIssue = await client.createIssue({
       teamId: input.teamId,
