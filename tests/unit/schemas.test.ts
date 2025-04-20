@@ -283,17 +283,17 @@ describe("Issue Schemas", () => {
     it("should validate a valid state update", () => {
       const validInput = {
         issueId: "issue-123",
-        stateId: "todo",
+        stateId: "state-123",
       };
 
       const result = UpdateIssueStateSchema.safeParse(validInput);
       expect(result.success).toBe(true);
     });
 
-    it("should reject invalid state values", () => {
+    it("should reject empty stateId", () => {
       const invalidInput = {
         issueId: "issue-123",
-        stateId: "invalid-state", // Not in enum
+        stateId: "",
       };
 
       const result = UpdateIssueStateSchema.safeParse(invalidInput);
