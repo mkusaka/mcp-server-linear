@@ -1,15 +1,66 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   getProjectIssuesResource,
   getIssueResource,
 } from "../../src/resources/issues.js";
 import { getProjectResource } from "../../src/resources/project.js";
-import { resetLinearClient } from "../../src/utils/linear.js";
+
+vi.mock("../../src/utils/linear.js", () => {
+  const mockStatusList = [
+    { id: "state-123", name: "Todo" },
+    { id: "status-1", name: "In Progress" },
+    { id: "status-2", name: "Done" },
+  ];
+
+  const mockLinearClient = {
+    project: vi.fn((projectId) => {
+      return Promise.resolve({
+        id: projectId,
+        name: "Mock Project",
+        issues: vi.fn().mockResolvedValue({
+          nodes: [
+            {
+              id: "mock-issue-id",
+              title: "Mock Issue",
+              description: "Mock Description",
+              state: "Todo",
+              priority: 2,
+              identifier: "MOCK-123",
+            },
+          ],
+        }),
+      });
+    }),
+    issue: vi.fn((issueId) => {
+      return Promise.resolve({
+        id: issueId,
+        title: "Test Issue",
+        description: "Test Description",
+        url: "https://linear.app/team/issue/MOCK-123",
+        state: { name: "Todo" },
+        priority: 2,
+        identifier: "MOCK-123",
+        comments: vi.fn().mockResolvedValue({ nodes: [] }),
+        children: vi.fn().mockResolvedValue({ nodes: [] }),
+        parent: vi.fn().mockResolvedValue(null),
+      });
+    }),
+    projectStatuses: vi.fn().mockResolvedValue({
+      nodes: mockStatusList,
+    }),
+  };
+
+  return {
+    resetLinearClient: vi.fn(),
+    getLinearClient: vi.fn().mockImplementation(() => Promise.resolve(mockLinearClient)),
+    issueStatusList: mockStatusList,
+  };
+});
 
 describe("Resource Handlers", () => {
   beforeEach(() => {
     process.env.LINEAR_API_KEY = "TEST_MODE";
-    resetLinearClient();
+    vi.clearAllMocks();
   });
 
   describe("getProjectIssuesResource", () => {
