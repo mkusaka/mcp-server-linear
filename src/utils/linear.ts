@@ -6,15 +6,26 @@ let client: LinearClient | null = null;
 export function getLinearClient(): LinearClient {
   if (!client) {
     const apiKey = process.env.LINEAR_API_KEY;
+    const clientId = process.env.LINEAR_OAUTH_CLIENT_ID;
+    const clientSecret = process.env.LINEAR_OAUTH_CLIENT_SECRET;
+
     logger.info("Initializing Linear client", {
       hasApiKey: !!apiKey,
+      hasOAuthCredentials: !!(clientId && clientSecret),
       envKeys: Object.keys(process.env).filter((key) => key.includes("LINEAR")),
     });
 
-    if (!apiKey) {
-      throw new Error("LINEAR_API_KEY is not set in environment variables");
+    if (clientId && clientSecret) {
+      logger.info("Using OAuth authentication");
+      client = new LinearClient({ accessToken: clientSecret });
+    } else if (apiKey) {
+      logger.info("Using API key authentication");
+      client = new LinearClient({ apiKey });
+    } else {
+      throw new Error(
+        "Neither LINEAR_API_KEY nor OAuth credentials (LINEAR_OAUTH_CLIENT_ID, LINEAR_OAUTH_CLIENT_SECRET) are set in environment variables",
+      );
     }
-    client = new LinearClient({ apiKey });
   }
   return client;
 }
