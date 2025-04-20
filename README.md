@@ -166,6 +166,20 @@ Add the following to your Cursor configuration file (`~/.cursor/config.json`):
 
 You can use this MCP server with Anthropic Claude through compatible clients like Cline or directly through the Claude API with MCP support.
 
+#### Prompt Examples
+
+When using this MCP server with AI assistants, you can include the following prompt examples to help the AI use the Linear tools effectively:
+
+```
+When I mention Linear issues, projects, or initiatives, or share Linear URLs, you should use the Linear MCP tools to:
+1. Retrieve information about the mentioned Linear resources
+2. Create new issues when requested
+3. Search for related issues or projects
+4. Provide context about Linear resources mentioned in our conversation
+
+For example, if I share a Linear issue URL like "https://linear.app/company/issue/ABC-123", you should use the Linear MCP tools to fetch and display information about that issue.
+```
+
 #### Other MCP Clients
 
 The server exposes various tools and resources over MCP that can be consumed by compatible clients:
