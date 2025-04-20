@@ -98,6 +98,31 @@ npm run debug
    }
    ```
 
+   Alternatively, you can use npx to run the package directly:
+   ```json
+   {
+     "mcpServers": {
+       "linear": {
+         "command": "npx",
+         "args": ["-y", "@mkusaka/mcp-server-linear"],
+         "env": {
+           "LINEAR_API_KEY": "your_linear_api_key"
+         },
+         "disabled": false,
+         "autoApprove": []
+       }
+     }
+   }
+   ```
+
+#### Running with npx
+
+You can run the MCP server directly using npx without installing it globally:
+
+```bash
+LINEAR_API_KEY=your_api_key_here npx -y @mkusaka/mcp-server-linear
+```
+
 #### MCP Inspector
 
 For development and testing, you can use the MCP Inspector to interact with the server:
@@ -110,6 +135,11 @@ For development and testing, you can use the MCP Inspector to interact with the 
 2. Run the server with the inspector:
    ```bash
    LINEAR_API_KEY=your_api_key_here mcp-inspector /path/to/mcp-server-linear/dist/index.js
+   ```
+
+   Or using npx:
+   ```bash
+   LINEAR_API_KEY=your_api_key_here npx -y @modelcontextprotocol/inspector @mkusaka/mcp-server-linear
    ```
 
 #### Anthropic Claude Integration
