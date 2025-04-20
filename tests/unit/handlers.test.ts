@@ -43,51 +43,52 @@ vi.mock("neverthrow", () => {
   };
 });
 
+const mockLinearClient = {
+  createIssue: vi.fn(({ teamId, title, description, projectId, estimate, priority }) => {
+    if (teamId === "test-team-id") {
+      return Promise.resolve({
+        issue: {
+          id: "new-mock-issue-id",
+          title,
+          description,
+        },
+      });
+    }
+    throw new Error("Team not found");
+  }),
+  issue: vi.fn((issueId) => {
+    if (issueId === "new-mock-issue-id") {
+      return Promise.resolve({
+        id: "new-mock-issue-id",
+        title: "Test Issue",
+        description: "Test Description",
+        url: "https://linear.app/team/issue/MOCK-123",
+        state: { name: "Todo" },
+        priority: 2,
+      });
+    }
+    throw new Error("Issue not found");
+  }),
+  projectStatuses: vi.fn().mockResolvedValue({
+    nodes: [
+      { id: "state-123", name: "Todo" },
+      { id: "status-1", name: "In Progress" },
+      { id: "status-2", name: "Done" },
+    ],
+  }),
+};
+
+// Mock the linear.js module
 vi.mock("../../src/utils/linear.js", () => {
   const mockStatusList = [
     { id: "state-123", name: "Todo" },
     { id: "status-1", name: "In Progress" },
     { id: "status-2", name: "Done" },
   ];
-
-  const mockLinearClient = {
-    createIssue: vi.fn(
-      ({ teamId, title, description, projectId, estimate, priority }) => {
-        if (teamId === "test-team-id") {
-          return Promise.resolve({
-            issue: {
-              id: "new-mock-issue-id",
-              title,
-              description,
-            },
-          });
-        }
-        throw new Error("Team not found");
-      },
-    ),
-    issue: vi.fn((issueId) => {
-      if (issueId === "new-mock-issue-id") {
-        return Promise.resolve({
-          id: "new-mock-issue-id",
-          title: "Test Issue",
-          description: "Test Description",
-          url: "https://linear.app/team/issue/MOCK-123",
-          state: { name: "Todo" },
-          priority: 2,
-        });
-      }
-      throw new Error("Issue not found");
-    }),
-    projectStatuses: vi.fn().mockResolvedValue({
-      nodes: mockStatusList,
-    }),
-  };
-
+  
   return {
     resetLinearClient: vi.fn(),
-    getLinearClient: vi
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockLinearClient)),
+    getLinearClient: vi.fn().mockResolvedValue(mockLinearClient),
     issueStatusList: mockStatusList,
   };
 });
