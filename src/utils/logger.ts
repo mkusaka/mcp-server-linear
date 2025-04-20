@@ -1,13 +1,13 @@
 import winston from "winston";
 
-const isDebugMode = process.argv.includes("--debug");
+interface LoggerConfig {
+  debug?: boolean;
+  logFile?: string;
+}
 
-const getLogFile = (): string => {
-  const logFileIndex = process.argv.indexOf("--log-file");
-  if (logFileIndex !== -1 && logFileIndex + 1 < process.argv.length) {
-    return process.argv[logFileIndex + 1];
-  }
-  return "linear-mcp.log";
+const defaultConfig: LoggerConfig = {
+  debug: false,
+  logFile: "linear-mcp.log",
 };
 
 export const logger = winston.createLogger({
@@ -16,12 +16,20 @@ export const logger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.json(),
   ),
-  transports: isDebugMode
-    ? [
-        new winston.transports.File({
-          filename: getLogFile(),
-          level: "info",
-        }),
-      ]
-    : [], // No transports when debug mode is disabled
+  transports: [], // No transports by default
 });
+
+export function configureLogger(config: LoggerConfig = {}): void {
+  const { debug, logFile } = { ...defaultConfig, ...config };
+  
+  logger.clear();
+  
+  if (debug) {
+    logger.add(
+      new winston.transports.File({
+        filename: logFile,
+        level: "info",
+      })
+    );
+  }
+}

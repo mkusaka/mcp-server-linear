@@ -53,7 +53,7 @@ import {
   updateIssueTool,
 } from "./tools/issues.js";
 import { searchIssuesTool } from "./tools/searchIssues.js";
-import { logger } from "./utils/logger.js";
+import { logger, configureLogger } from "./utils/logger.js";
 
 const server = new McpServer({
   name: "linear-mcp-server",
@@ -220,6 +220,11 @@ const program = new Command()
   .option("--log-file <path>", "Specify log file path", "linear-mcp.log");
 
 program.parse();
+
+configureLogger({
+  debug: program.opts().debug,
+  logFile: program.opts().logFile,
+});
 
 async function runServer() {
   logger.info("Starting Linear MCP Server", {
