@@ -208,7 +208,7 @@ server.tool(
   "search_issues",
   "Search for issues with advanced filtering options",
   SearchIssuesSchema.shape,
-  searchIssuesTool
+  searchIssuesTool,
 );
 
 async function runServer() {
