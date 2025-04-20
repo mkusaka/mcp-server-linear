@@ -119,5 +119,5 @@ export const UpdateIssueStateSchema = z.object({
     .string()
     .min(1, "issue id is required")
     .describe("target issue id"),
-  state: z.nativeEnum(Object.fromEntries(issueStatusList.map(s => [s, s]))).describe("issue state name"),
+  state: z.nativeEnum(Object.fromEntries(issueStatusList.map(s => [s, s]))).describe("issue status"),
 });
