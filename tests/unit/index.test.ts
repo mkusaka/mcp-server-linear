@@ -102,7 +102,7 @@ describe("Server Initialization", () => {
 
     const mockServer = (McpServer as any).mock.results[0].value;
 
-    expect(mockServer.tool).toHaveBeenCalledTimes(19);
+    expect(mockServer.tool).toHaveBeenCalledTimes(20);
 
     expect(StdioServerTransport).toHaveBeenCalled();
 
