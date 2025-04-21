@@ -1,6 +1,6 @@
 {
   "name": "@mkusaka/mcp-server-linear",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "MCP server for using the Linear API",
   "type": "module",
   "main": "dist/index.js",
@@ -50,5 +50,9 @@
     "winston": "^3.17.0",
     "zod": "^3.24.3",
     "zod-to-json-schema": "^3.24.5"
+  },
+  "repository": {
+    "url": "https://github.com/mkusaka/mcp-server-linear",
+    "type": "git"
   }
 }
