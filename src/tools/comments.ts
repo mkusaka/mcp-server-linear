@@ -1,14 +1,13 @@
 import { InvalidInputLinearError, LinearError } from "@linear/sdk";
 import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getLinearClient } from "../utils/linear.js";
-import { logger } from "../utils/logger.js";
 import {
   CreateCommentSchema,
   DeleteCommentSchema,
-  GetCommentSchema,
   GetIssueCommentsSchema,
   UpdateCommentSchema,
 } from "../schemas/comments.js";
+import { getLinearClient } from "../utils/linear.js";
+import { logger } from "../utils/logger.js";
 
 export const getIssueCommentsResource: ToolCallback<
   typeof GetIssueCommentsSchema.shape

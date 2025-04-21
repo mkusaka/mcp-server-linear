@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
   return {

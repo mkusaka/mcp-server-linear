@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { searchIssuesTool } from "../../src/tools/searchIssues.js";
 
 vi.mock("../../src/schemas/issueFilters.js", () => {

@@ -1,7 +1,7 @@
-import { getLinearClient } from "../utils/linear.js";
-import { logger } from "../utils/logger.js";
 import { z } from "zod";
 import { SearchIssuesSchema } from "../schemas/issueFilters.js";
+import { getLinearClient } from "../utils/linear.js";
+import { logger } from "../utils/logger.js";
 
 type SearchIssuesInput = z.infer<typeof SearchIssuesSchema>;
 
