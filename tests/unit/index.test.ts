@@ -95,10 +95,13 @@ describe("Server Initialization", () => {
   it("should initialize the MCP server with all tools", async () => {
     await import("../../src/index.js");
 
-    expect(McpServer).toHaveBeenCalledWith({
-      name: "linear-mcp-server",
-      version: "1.0.0",
-    });
+    expect(McpServer).toHaveBeenCalledWith(
+      {
+        name: "linear-mcp-server",
+        version: "1.0.0",
+      },
+      expect.any(Object),
+    );
 
     const mockServer = (McpServer as any).mock.results[0].value;
 

@@ -57,10 +57,27 @@ import { updateProjectStateTool } from "./tools/projects.js";
 import { searchIssuesTool } from "./tools/searchIssues.js";
 import { logger, configureLogger } from "./utils/logger.js";
 
-const server = new McpServer({
-  name: "linear-mcp-server",
-  version: "1.0.0",
-});
+const server = new McpServer(
+  {
+    name: "linear-mcp-server",
+    version: "1.0.0",
+  },
+  {
+    instructions: `This MCP server enables AI assistants to interact with Linear issue tracking system directly. Use this server when you need to:
+
+- Retrieve information about issues, projects, or teams in Linear without leaving your development environment
+- Create new issues based on discussions or requirements identified during a conversation
+- Search for specific issues across projects using flexible filters
+- Update issue details, status, priority, or labels during project reviews
+- Track project progress by accessing issue states and team information
+- Add comments to issues for documentation or clarification
+- Manage project states and team workloads
+
+When interacting with this server, you can request information using natural language about Linear resources. For example, you can ask "Show me all the high priority issues in Project X" or "Create a new bug report for the authentication feature."
+
+The server will automatically handle the API communication with Linear and return the relevant information in a structured format. This allows for seamless integration of Linear project management into your workflows without context switching.`,
+  },
+);
 
 // Define projects list resource
 server.tool(
