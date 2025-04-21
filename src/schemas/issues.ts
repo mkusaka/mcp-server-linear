@@ -125,5 +125,8 @@ export const UpdateProjectStateSchema = z.object({
     .string()
     .min(1, "project id is required")
     .describe("target project id"),
-  statusId: z.string().min(1, "status id is required").describe("project status id"),
+  statusId: z
+    .string()
+    .min(1, "status id is required")
+    .describe("project status id"),
 });
