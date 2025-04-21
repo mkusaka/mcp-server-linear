@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
-  getProjectIssuesResource,
   getIssueResource,
+  getProjectIssuesResource,
 } from "../../src/resources/issues.js";
 import { getProjectResource } from "../../src/resources/project.js";
 import { resetLinearClient } from "../../src/utils/linear.js";

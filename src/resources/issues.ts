@@ -1,14 +1,17 @@
-import { InvalidInputLinearError, LinearError } from "@linear/sdk";
+import {
+  InvalidInputLinearError,
+  LinearDocument,
+  LinearError,
+} from "@linear/sdk";
 import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+  GetIssuePrioritiesSchema,
+  GetIssueSchema,
+  GetProjectIssuesSchema,
+  GetStatusListSchema,
+} from "../schemas/issues.js";
 import { getLinearClient } from "../utils/linear.js";
 import { logger } from "../utils/logger.js";
-import {
-  GetProjectIssuesSchema,
-  GetIssueSchema,
-  GetStatusListSchema,
-  GetIssuePrioritiesSchema,
-} from "../schemas/issues.js";
-import { LinearDocument } from "@linear/sdk";
 
 export const getProjectIssuesResource: ToolCallback<
   typeof GetProjectIssuesSchema.shape

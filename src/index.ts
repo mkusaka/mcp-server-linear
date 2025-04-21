@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { Command } from "commander";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { Command } from "commander";
 import {
   getIssueResource,
   getProjectIssuesResource,
@@ -20,6 +20,7 @@ import {
   GetIssueCommentsSchema,
   UpdateCommentSchema,
 } from "./schemas/comments.js";
+import { SearchIssuesSchema } from "./schemas/issueFilters.js";
 import {
   CreateIssueSchema,
   DeleteIssueSchema,
@@ -37,7 +38,6 @@ import {
   UpdateIssueStateSchema,
   UpdateProjectStateSchema,
 } from "./schemas/issues.js";
-import { SearchIssuesSchema } from "./schemas/issueFilters.js";
 import {
   createCommentTool,
   deleteCommentTool,
@@ -55,7 +55,7 @@ import {
 } from "./tools/issues.js";
 import { updateProjectStateTool } from "./tools/projects.js";
 import { searchIssuesTool } from "./tools/searchIssues.js";
-import { logger, configureLogger } from "./utils/logger.js";
+import { configureLogger, logger } from "./utils/logger.js";
 
 const server = new McpServer(
   {
