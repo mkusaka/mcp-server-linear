@@ -46,7 +46,6 @@
     "@linear/sdk": "^39.0.0",
     "@modelcontextprotocol/sdk": "^1.10.1",
     "commander": "^13.1.0",
-    "neverthrow": "^8.2.0",
     "winston": "^3.17.0",
     "zod": "^3.24.3",
     "zod-to-json-schema": "^3.24.5"
