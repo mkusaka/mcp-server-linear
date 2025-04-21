@@ -61,7 +61,7 @@ You can set up the `LINEAR_API_KEY` environment variable:
 5. Set the environment variable when running the server:
 
 ```bash
-LINEAR_API_KEY=your_api_key_here npm run debug
+LINEAR_API_KEY=your_api_key_here pnpm run debug
 ```
 
 #### Option 2: OAuth Authentication
@@ -88,17 +88,17 @@ Alternatively, you can set the environment variables in your shell profile or us
 For development and testing, you can use the built-in inspector:
 
 ```bash
-npm run debug
+pnpm run debug
 ```
 
 #### Command Line Options
 
 ```bash
 # Enable logging (logs to linear-mcp.log by default)
-npm run start -- --debug
+pnpm run start -- --debug
 
 # Enable logging with custom log file path
-npm run start -- --debug --log-file custom-path.log
+pnpm run start -- --debug --log-file custom-path.log
 ```
 
 ### Integration with MCP Tools
@@ -167,7 +167,7 @@ For development and testing, you can use the MCP Inspector to interact with the 
 1. Install the MCP Inspector globally:
 
    ```bash
-   npm install -g @modelcontextprotocol/inspector
+   pnpm install -g @modelcontextprotocol/inspector
    ```
 
 2. Run the server with the inspector:
@@ -447,16 +447,16 @@ Get all issues in a project in Linear.
 
 ```bash
 # Run tests
-npm test
+pnpm test
 
 # Build the project
-npm run build
+pnpm run build
 
 # Watch for changes
-npm run watch
+pnpm run watch
 
 # Run with inspector
-npm run debug
+pnpm run debug
 ```
 
 ## Contributing
