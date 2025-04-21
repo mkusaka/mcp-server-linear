@@ -36,8 +36,8 @@ export const getProjectIssuesResource: ToolCallback<
           title: issue.title,
           description: issue.description,
           state: {
-            type: stateData,
-            name: stateData,
+            type: stateData.type,
+            name: stateData.name,
           },
         };
       })
@@ -58,7 +58,7 @@ export const getProjectIssuesResource: ToolCallback<
               issues: issuesWithResolvedState,
             },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -81,7 +81,7 @@ export const getProjectIssuesResource: ToolCallback<
                 message: error.message,
               },
               null,
-              2,
+              2
             ),
             mimeType: "application/json",
           },
@@ -100,7 +100,7 @@ export const getProjectIssuesResource: ToolCallback<
                 message: error.message,
               },
               null,
-              2,
+              2
             ),
             mimeType: "application/json",
           },
@@ -118,7 +118,7 @@ export const getProjectIssuesResource: ToolCallback<
               message: error instanceof Error ? error.message : "Unknown error",
             },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -162,7 +162,7 @@ export const getIssueResource: ToolCallback<
               : null,
             createdAt: comment.createdAt,
           };
-        }),
+        })
       );
     }
 
@@ -185,11 +185,11 @@ export const getIssueResource: ToolCallback<
             title: child.title,
             description: child.description,
             state: {
-              type: childState,
-              name: childState,
+              type: childState.type,
+              name: childState.name,
             },
           };
-        }),
+        })
       );
     }
 
@@ -203,8 +203,8 @@ export const getIssueResource: ToolCallback<
           title: parentData.title,
           description: parentData.description,
           state: {
-            type: parentState,
-            name: parentState,
+            type: parentState.type,
+            name: parentState.name,
           },
         };
       }
@@ -228,8 +228,8 @@ export const getIssueResource: ToolCallback<
                 title: issue.title,
                 description: issue.description,
                 state: {
-                  type: stateData,
-                  name: stateData,
+                  type: stateData.type,
+                  name: stateData.name,
                 },
                 comments,
                 children,
@@ -238,7 +238,7 @@ export const getIssueResource: ToolCallback<
               },
             },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -261,7 +261,7 @@ export const getIssueResource: ToolCallback<
                 message: error.message,
               },
               null,
-              2,
+              2
             ),
             mimeType: "application/json",
           },
@@ -280,7 +280,7 @@ export const getIssueResource: ToolCallback<
                 message: error.message,
               },
               null,
-              2,
+              2
             ),
             mimeType: "application/json",
           },
@@ -298,7 +298,7 @@ export const getIssueResource: ToolCallback<
               message: error instanceof Error ? error.message : "Unknown error",
             },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -328,7 +328,7 @@ export const getIssueStatusListResource: ToolCallback<
               })),
             },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -345,7 +345,7 @@ export const getIssueStatusListResource: ToolCallback<
           text: JSON.stringify(
             { error: "Failed to get project statuses" },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -372,7 +372,7 @@ export const getIssuePrioritiesResource: ToolCallback<
               })),
             },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
@@ -389,7 +389,7 @@ export const getIssuePrioritiesResource: ToolCallback<
           text: JSON.stringify(
             { error: "Failed to get issue priorities" },
             null,
-            2,
+            2
           ),
           mimeType: "application/json",
         },
