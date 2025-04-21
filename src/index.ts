@@ -35,6 +35,7 @@ import {
   UpdateIssuePrioritySchema,
   UpdateIssueSchema,
   UpdateIssueStateSchema,
+  UpdateProjectStateSchema,
 } from "./schemas/issues.js";
 import { SearchIssuesSchema } from "./schemas/issueFilters.js";
 import {
@@ -52,6 +53,7 @@ import {
   updateIssueStateTool,
   updateIssueTool,
 } from "./tools/issues.js";
+import { updateProjectStateTool } from "./tools/projects.js";
 import { searchIssuesTool } from "./tools/searchIssues.js";
 import { logger, configureLogger } from "./utils/logger.js";
 
@@ -210,6 +212,14 @@ server.tool(
   "Search for issues with advanced filtering options",
   SearchIssuesSchema.shape,
   searchIssuesTool,
+);
+
+// Define update project state tool
+server.tool(
+  "update_project_state",
+  "Update the state of an existing project in Linear",
+  UpdateProjectStateSchema.shape,
+  updateProjectStateTool,
 );
 
 const program = new Command()
