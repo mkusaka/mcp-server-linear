@@ -16,6 +16,7 @@ export const getProjectIssuesResource: ToolCallback<
   const client = getLinearClient();
   try {
     const project = await client.project(args.projectId as string);
+    const projectState = await project.state;
     const issues = await project.issues({
       filter: {
         state: {
@@ -25,6 +26,22 @@ export const getProjectIssuesResource: ToolCallback<
       orderBy: LinearDocument.PaginationOrderBy.UpdatedAt,
       first: 100,
     });
+
+    // Resolve state promises for all issues
+    const issuesWithResolvedState = await Promise.all(
+      issues.nodes.map(async (issue) => {
+        const stateData = await issue.state;
+        return {
+          id: issue.id,
+          title: issue.title,
+          description: issue.description,
+          state: {
+            type: stateData?.type,
+            name: stateData?.name,
+          },
+        };
+      }),
+    );
 
     return {
       content: [
@@ -36,17 +53,9 @@ export const getProjectIssuesResource: ToolCallback<
                 id: project.id,
                 name: project.name,
                 description: project.description,
-                state: project.state,
+                state: projectState,
               },
-              issues: issues.nodes.map((issue) => ({
-                id: issue.id,
-                title: issue.title,
-                description: issue.description,
-                state: {
-                  type: issue.state,
-                  name: issue.state,
-                },
-              })),
+              issues: issuesWithResolvedState,
             },
             null,
             2,
@@ -176,8 +185,8 @@ export const getIssueResource: ToolCallback<
             title: child.title,
             description: child.description,
             state: {
-              type: childState,
-              name: childState,
+              type: childState?.type,
+              name: childState?.name,
             },
           };
         }),
@@ -194,8 +203,8 @@ export const getIssueResource: ToolCallback<
           title: parentData.title,
           description: parentData.description,
           state: {
-            type: parentState,
-            name: parentState,
+            type: parentState?.type,
+            name: parentState?.name,
           },
         };
       }
@@ -219,8 +228,8 @@ export const getIssueResource: ToolCallback<
                 title: issue.title,
                 description: issue.description,
                 state: {
-                  type: stateData,
-                  name: stateData,
+                  type: stateData?.type,
+                  name: stateData?.name,
                 },
                 comments,
                 children,
