@@ -63,19 +63,64 @@ const server = new McpServer(
     version: "1.0.0",
   },
   {
-    instructions: `This MCP server enables AI assistants to interact with Linear issue tracking system directly. Use this server when you need to:
+    instructions: `This MCP server enables AI assistants to interact with Linear issue tracking system directly.
 
-- Retrieve information about issues, projects, or teams in Linear without leaving your development environment
-- Create new issues based on discussions or requirements identified during a conversation
-- Search for specific issues across projects using flexible filters
-- Update issue details, status, priority, or labels during project reviews
-- Track project progress by accessing issue states and team information
-- Add comments to issues for documentation or clarification
-- Manage project states and team workloads
+Capabilities:
+1. Retrieve detailed information about issues, projects, teams, and users in Linear
+2. Create and update issues with customizable fields (title, description, priority, etc.)
+3. Add and manage comments on issues for collaborative discussions
+4. Track project progress through state changes and team workload analysis
+5. Search and filter issues across projects using flexible criteria
+6. Update issue details including labels, priority, state, and estimates
+7. Manage project states and monitor team activities
 
-When interacting with this server, you can request information using natural language about Linear resources. For example, you can ask "Show me all the high priority issues in Project X" or "Create a new bug report for the authentication feature."
+When to use Linear MCP tools:
+- During project planning to create and organize new issues
+- In development discussions to reference or update existing issues
+- During code reviews to link discussions to specific Linear issues
+- In sprint planning to assess team workload and resource allocation
+- When documenting bugs or feature requests discovered during conversations
+- During project status reviews to track progress and update stakeholders
 
-The server will automatically handle the API communication with Linear and return the relevant information in a structured format. This allows for seamless integration of Linear project management into your workflows without context switching.`,
+Interaction Protocol:
+When working with Linear resources, follow these steps:
+1. Identify the Linear-related request or information need
+2. Select the appropriate tool based on the operation required:
+   - Use resource retrieval tools for getting information (issues, projects, etc.)
+   - Use creation/update tools for modifying Linear data
+   - Use search tools for finding specific issues across projects
+3. Format the request with required parameters following the tool's schema
+4. Process the response and present the information in a contextually appropriate format
+
+Example Interactions:
+
+Example 1: Creating a new issue
+User: "I need to create a task for implementing user authentication"
+Assistant: "I'll create that issue for you. What project should I add it to?"
+User: "Add it to the Backend project"
+Assistant: *Creates issue in Linear using create_issue tool with appropriate parameters*
+Assistant: "I've created the issue 'Implement user authentication' in the Backend project. Here's the link: [BACK-123]"
+
+Example 2: Retrieving issue information
+User: "What's the status of BACK-123?"
+Assistant: *Retrieves issue information using the issue tool*
+Assistant: "The issue 'Implement user authentication' (BACK-123) is currently in the 'In Progress' state and is assigned to Alex with high priority."
+
+Example 3: Searching for issues
+User: "Show me all high priority bugs in the Frontend project"
+Assistant: *Uses search_issues tool with appropriate filters*
+Assistant: "I found 3 high priority bugs in the Frontend project:
+1. 'Fix login page CSS' (FRONT-42)
+2. 'Address accessibility issues in navigation' (FRONT-45)
+3. 'Fix image loading performance' (FRONT-51)"
+
+Guidelines for Effective Usage:
+- Always verify you have sufficient information before creating or updating Linear resources
+- Present Linear data in a structured, easy-to-understand format
+- When creating new issues, ensure proper categorization with appropriate labels and projects
+- Use precise search filters to retrieve relevant issues and avoid overwhelming results
+- Maintain conversational context when working with Linear resources across multiple exchanges
+- Format Linear URLs consistently and provide direct links when referencing specific resources`,
   },
 );
 
