@@ -5,7 +5,7 @@ import { logger } from "../utils/logger.js";
 import {
   GetProjectIssuesSchema,
   GetIssueSchema,
-  GetIssueStatusListSchema,
+  GetStatusListSchema,
   GetIssuePrioritiesSchema,
 } from "../schemas/issues.js";
 import { LinearDocument } from "@linear/sdk";
@@ -300,7 +300,7 @@ export const getIssueResource: ToolCallback<
 };
 
 export const getStatusListResource: ToolCallback<
-  typeof GetIssueStatusListSchema.shape
+  typeof GetStatusListSchema.shape
 > = async (args, extra) => {
   const client = getLinearClient();
   try {

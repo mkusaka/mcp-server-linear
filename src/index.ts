@@ -28,7 +28,7 @@ import {
   GetProjectIssuesSchema,
   GetProjectSchema,
   GetProjectsSchema,
-  GetIssueStatusListSchema,
+  GetStatusListSchema,
   GetViewerSchema,
   UpdateIssueEstimateSchema,
   UpdateIssueLabelsSchema,
@@ -87,8 +87,8 @@ server.tool(
 // Define status list resource
 server.tool(
   "status-list",
-  "Get all available project statuses in Linear",
-  GetIssueStatusListSchema.shape,
+  "Get all available project or issue statuses in Linear",
+  GetStatusListSchema.shape,
   getStatusListResource,
 );
 
