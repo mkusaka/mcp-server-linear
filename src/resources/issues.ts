@@ -299,7 +299,7 @@ export const getIssueResource: ToolCallback<
   }
 };
 
-export const getIssueStatusListResource: ToolCallback<
+export const getStatusListResource: ToolCallback<
   typeof GetIssueStatusListSchema.shape
 > = async (args, extra) => {
   const client = getLinearClient();

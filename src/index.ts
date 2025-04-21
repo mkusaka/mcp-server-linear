@@ -6,7 +6,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   getIssueResource,
   getProjectIssuesResource,
-  getIssueStatusListResource,
+  getStatusListResource,
 } from "./resources/issues.js";
 import { getIssueLabelsResource } from "./resources/labels.js";
 import {
@@ -35,6 +35,7 @@ import {
   UpdateIssuePrioritySchema,
   UpdateIssueSchema,
   UpdateIssueStateSchema,
+  UpdateProjectStateSchema,
 } from "./schemas/issues.js";
 import { SearchIssuesSchema } from "./schemas/issueFilters.js";
 import {
@@ -52,6 +53,7 @@ import {
   updateIssueStateTool,
   updateIssueTool,
 } from "./tools/issues.js";
+import { updateProjectStateTool } from "./tools/projects.js";
 import { searchIssuesTool } from "./tools/searchIssues.js";
 import { logger, configureLogger } from "./utils/logger.js";
 
@@ -84,12 +86,12 @@ server.tool(
   getIssueResource,
 );
 
-// Define issue status list resource
+// Define status list resource
 server.tool(
-  "issue-status-list",
-  "Get all issue attachable statuses in Linear",
+  "status-list",
+  "Get all available project statuses in Linear",
   GetIssueStatusListSchema.shape,
-  getIssueStatusListResource,
+  getStatusListResource,
 );
 
 // Define project issues resource
@@ -162,6 +164,14 @@ server.tool(
   "Update the state of an existing issue in Linear",
   UpdateIssueStateSchema.shape,
   updateIssueStateTool,
+);
+
+// Define update project state tool
+server.tool(
+  "update_project_state",
+  "Update the state of an existing project in Linear",
+  UpdateProjectStateSchema.shape,
+  updateProjectStateTool,
 );
 
 // Define create comment tool
