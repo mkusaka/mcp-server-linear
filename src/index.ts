@@ -5,8 +5,9 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { Command } from "commander";
 import {
   getIssueResource,
+  getIssueStatesResource,
   getProjectIssuesResource,
-  getStatusListResource,
+  getProjectStatusesResource,
 } from "./resources/issues.js";
 import { getIssueLabelsResource } from "./resources/labels.js";
 import {
@@ -26,10 +27,11 @@ import {
   DeleteIssueSchema,
   GetIssueLabelsSchema,
   GetIssueSchema,
+  GetIssueStatesSchema,
   GetProjectIssuesSchema,
   GetProjectSchema,
   GetProjectsSchema,
-  GetStatusListSchema,
+  GetProjectStatusesSchema,
   GetViewerSchema,
   UpdateIssueEstimateSchema,
   UpdateIssueLabelsSchema,
@@ -148,12 +150,20 @@ server.tool(
   getIssueResource,
 );
 
-// Define status list resource
+// Define project statuses resource
 server.tool(
-  "status-list",
-  "Get all available project or issue statuses in Linear",
-  GetStatusListSchema.shape,
-  getStatusListResource,
+  "project_statuses",
+  "Get all available project statuses in Linear",
+  GetProjectStatusesSchema.shape,
+  getProjectStatusesResource,
+);
+
+// Define issue states resource
+server.tool(
+  "issue-states",
+  "Get all available issue states (workflow states) in Linear",
+  GetIssueStatesSchema.shape,
+  getIssueStatesResource,
 );
 
 // Define project issues resource

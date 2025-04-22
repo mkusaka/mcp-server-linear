@@ -20,7 +20,8 @@ vi.mock("@modelcontextprotocol/sdk/server/stdio.js", () => {
 vi.mock("../../src/resources/issues.js", () => ({
   getIssueResource: vi.fn(),
   getProjectIssuesResource: vi.fn(),
-  getStatusListResource: vi.fn(),
+  getProjectStatusesResource: vi.fn(),
+  getIssueStatesResource: vi.fn(),
 }));
 
 vi.mock("../../src/resources/labels.js", () => ({
@@ -105,7 +106,7 @@ describe("Server Initialization", () => {
 
     const mockServer = (McpServer as any).mock.results[0].value;
 
-    expect(mockServer.tool).toHaveBeenCalledTimes(20);
+    expect(mockServer.tool).toHaveBeenCalledTimes(21);
 
     expect(StdioServerTransport).toHaveBeenCalled();
 

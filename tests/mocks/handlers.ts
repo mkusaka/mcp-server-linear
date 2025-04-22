@@ -148,6 +148,71 @@ export const handlers = [
       });
     }
 
+    if (query.includes("projectStatuses")) {
+      return HttpResponse.json({
+        data: {
+          projectStatuses: {
+            nodes: [
+              {
+                id: "mock-project-status-1",
+                name: "Not Started",
+                description: "Project has not started yet",
+                position: 1,
+              },
+              {
+                id: "mock-project-status-2",
+                name: "In Progress",
+                description: "Project is in progress",
+                position: 2,
+              },
+              {
+                id: "mock-project-status-3",
+                name: "Completed",
+                description: "Project is completed",
+                position: 3,
+              },
+            ],
+          },
+        },
+      });
+    }
+
+    if (query.includes("workflowStates")) {
+      return HttpResponse.json({
+        data: {
+          workflowStates: {
+            nodes: [
+              {
+                id: "mock-workflow-state-1",
+                name: "Backlog",
+                type: "backlog",
+              },
+              {
+                id: "mock-workflow-state-2",
+                name: "Todo",
+                type: "unstarted",
+              },
+              {
+                id: "mock-workflow-state-3",
+                name: "In Progress",
+                type: "started",
+              },
+              {
+                id: "mock-workflow-state-4",
+                name: "Done",
+                type: "completed",
+              },
+              {
+                id: "mock-workflow-state-5",
+                name: "Canceled",
+                type: "canceled",
+              },
+            ],
+          },
+        },
+      });
+    }
+
     return HttpResponse.json(
       {
         data: null,
