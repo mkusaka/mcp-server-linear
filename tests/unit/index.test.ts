@@ -20,7 +20,8 @@ vi.mock("@modelcontextprotocol/sdk/server/stdio.js", () => {
 vi.mock("../../src/resources/issues.js", () => ({
   getIssueResource: vi.fn(),
   getProjectIssuesResource: vi.fn(),
-  getStatusListResource: vi.fn(),
+  getProjectStatusesResource: vi.fn(),
+  getIssueStatesResource: vi.fn(),
 }));
 
 vi.mock("../../src/resources/labels.js", () => ({
