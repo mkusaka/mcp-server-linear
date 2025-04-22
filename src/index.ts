@@ -160,7 +160,7 @@ server.tool(
 
 // Define issue states resource
 server.tool(
-  "issue-states",
+  "issue_states",
   "Get all available issue states (workflow states) in Linear",
   GetIssueStatesSchema.shape,
   getIssueStatesResource,
@@ -168,7 +168,7 @@ server.tool(
 
 // Define project issues resource
 server.tool(
-  "project-issues",
+  "project_issues",
   "Get all issues in a project in Linear",
   GetProjectIssuesSchema.shape,
   getProjectIssuesResource,
@@ -176,7 +176,7 @@ server.tool(
 
 // Define issue labels resource
 server.tool(
-  "issue-labels",
+  "issue_labels",
   "Get all issue labels in Linear",
   GetIssueLabelsSchema.shape,
   getIssueLabelsResource,

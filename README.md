@@ -255,9 +255,9 @@ Resource Access:
 - `projects` - Get all projects in Linear
 - `project` - Get a single project by ID
 - `issue` - Get a single issue by ID
-- `project-statuses` - Get all project statuses
-- `project-issues` - Get all issues in a project
-- `issue-labels` - Get all issue labels
+- `project_statuses` - Get all project statuses
+- `project_issues` - Get all issues in a project
+- `issue_labels` - Get all issue labels
 
 ## Architecture
 
@@ -437,7 +437,7 @@ Get a single project in Linear.
 Get all issues in a project in Linear.
 
 ```typescript
-// Tool name: project-issues
+// Tool name: project_issues
 {
   projectId: string; // Target project ID (required)
 }
