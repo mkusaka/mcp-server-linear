@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       
+      - name: Run tests
+        run: pnpm test
+      
       - name: Configure Git
         run: |
           git config --local user.name "GitHub Actions"
@@ -73,9 +76,6 @@ jobs:
             --verify-tag
       
       # Integrated npm-publish functionality
-      - name: Run tests
-        run: pnpm test
-      
       - name: Publish to npm
         run: npm publish --provenance --access public
         env:
