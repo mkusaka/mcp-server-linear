@@ -368,11 +368,14 @@ test("tools/call works", async () => {
   const res = await client.request(
     {
       method: "tools/call",
-      params: { name: "createIssue", arguments: { 
-        title: "Test Issue", 
-        description: "Test Description",
-        teamId: "test-team-id"
-      } },
+      params: {
+        name: "createIssue",
+        arguments: {
+          title: "Test Issue",
+          description: "Test Description",
+          teamId: "test-team-id",
+        },
+      },
     },
     CallToolResultSchema,
   );
