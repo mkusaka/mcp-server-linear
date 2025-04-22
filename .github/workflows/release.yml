@@ -63,7 +63,7 @@ jobs:
         run: |
           git add package.json
           git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
-          git push HEAD
+          git push
           git push --tags
       
       - name: Create Release
