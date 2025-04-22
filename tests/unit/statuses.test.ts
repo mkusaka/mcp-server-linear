@@ -1,14 +1,61 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   getIssueStatesResource,
   getProjectStatusesResource,
 } from "../../src/resources/issues.js";
 import { resetLinearClient } from "../../src/utils/linear.js";
+import { LinearClient } from "@linear/sdk";
+
+vi.mock("@linear/sdk", () => {
+  return {
+    LinearClient: vi.fn().mockImplementation(() => ({
+      projectStatuses: vi.fn().mockResolvedValue({
+        nodes: [
+          {
+            id: "mock-project-status-1",
+            name: "Not Started",
+            description: "Project has not started yet",
+            position: 1,
+          },
+          {
+            id: "mock-project-status-2",
+            name: "In Progress",
+            description: "Project is in progress",
+            position: 2,
+          },
+        ],
+      }),
+      workflowStates: vi.fn().mockResolvedValue({
+        nodes: [
+          {
+            id: "mock-workflow-state-1",
+            name: "Backlog",
+            type: "backlog",
+          },
+          {
+            id: "mock-workflow-state-2",
+            name: "Todo",
+            type: "unstarted",
+          },
+        ],
+      }),
+    })),
+    InvalidInputLinearError: class {},
+    LinearError: class {},
+    LinearDocument: {
+      PaginationOrderBy: {
+        UpdatedAt: "updatedAt",
+        CreatedAt: "createdAt",
+      },
+    },
+  };
+});
 
 describe("Status Resource Handlers", () => {
   beforeEach(() => {
     process.env.LINEAR_API_KEY = "TEST_MODE";
     resetLinearClient();
+    vi.clearAllMocks();
   });
 
   describe("getProjectStatusesResource", () => {
