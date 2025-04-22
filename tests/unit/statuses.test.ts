@@ -4,7 +4,6 @@ import {
   getProjectStatusesResource,
 } from "../../src/resources/issues.js";
 import { resetLinearClient } from "../../src/utils/linear.js";
-import { LinearClient } from "@linear/sdk";
 
 vi.mock("@linear/sdk", () => {
   return {
