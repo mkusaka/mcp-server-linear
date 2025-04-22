@@ -59,12 +59,9 @@ describe("Status Resource Handlers", () => {
 
   describe("getProjectStatusesResource", () => {
     it("should return project statuses", async () => {
-      const result = await getProjectStatusesResource(
-        {},
-        {
-          auth: { apiKey: process.env.LINEAR_API_KEY },
-        } as any
-      );
+      const result = await getProjectStatusesResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
@@ -86,12 +83,9 @@ describe("Status Resource Handlers", () => {
 
   describe("getIssueStatesResource", () => {
     it("should return issue states (workflow states)", async () => {
-      const result = await getIssueStatesResource(
-        {},
-        {
-          auth: { apiKey: process.env.LINEAR_API_KEY },
-        } as any
-      );
+      const result = await getIssueStatesResource({}, {
+        auth: { apiKey: process.env.LINEAR_API_KEY },
+      } as any);
 
       expect(result).toBeDefined();
       expect(result.content).toHaveLength(1);
