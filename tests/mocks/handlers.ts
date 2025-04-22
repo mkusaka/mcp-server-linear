@@ -147,7 +147,7 @@ export const handlers = [
         },
       });
     }
-    
+
     if (query.includes("projectStatuses")) {
       return HttpResponse.json({
         data: {
@@ -176,7 +176,7 @@ export const handlers = [
         },
       });
     }
-    
+
     if (query.includes("workflowStates")) {
       return HttpResponse.json({
         data: {
