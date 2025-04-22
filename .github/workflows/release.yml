@@ -63,7 +63,9 @@ jobs:
         run: |
           git add package.json
           git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
+          git tag v${{ steps.version.outputs.new_version }}
           git push
+          git push --tags
       
       - name: Create Release
         id: create_release
@@ -71,7 +73,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create v${{ steps.version.outputs.new_version }} \
-            --title "Release v${{ steps.version.outputs.new_version }}" \
+            --title "v${{ steps.version.outputs.new_version }}" \
             --generate-notes \
             --verify-tag
       
