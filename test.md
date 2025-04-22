@@ -303,12 +303,123 @@ it("should handle API errors gracefully", async () => {
 });
 ```
 
+## End-to-End Testing with SDK Approach
+
+In addition to unit testing with MSW, we can implement end-to-end (E2E) testing using the MCP SDK's `Client` and `InMemoryTransport`. This approach allows us to test the server logic directly in memory without spawning separate processes or dealing with stdio communication.
+
+### Setup for SDK-based E2E Testing
+
+```typescript
+import { describe, test, beforeEach, expect } from "vitest";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import {
+  ListToolsResultSchema,
+  CallToolResultSchema,
+  GetPromptResultSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import { createServer } from "../../src/server.js"; // server factory function
+
+describe("MCP Server E2E (in‐memory)", () => {
+  let mcpServer: ReturnType<typeof createServer>;
+  let client: Client;
+  let clientTransport: ReturnType<typeof InMemoryTransport.createLinkedPair>[0];
+  let serverTransport: ReturnType<typeof InMemoryTransport.createLinkedPair>[1];
+
+  beforeEach(async () => {
+    // instantiate the server (register resources/prompts/tools)
+    mcpServer = createServer();
+
+    client = new Client({ name: "test client", version: "1.0" });
+    [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+
+    // connect both sides
+    await Promise.all([
+      mcpServer.server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+  });
+
+  // Test cases will go here
+});
+```
+
+### Testing Server Functionality
+
+With the SDK approach, we can test various server functionalities:
+
+#### 1. Listing Available Tools
+
+```typescript
+test("tools/list returns all tools", async () => {
+  const res = await client.request(
+    { method: "tools/list", params: {} },
+    ListToolsResultSchema,
+  );
+  expect(Array.isArray(res.tools)).toBe(true);
+  // Optionally check names, count, etc.
+});
+```
+
+#### 2. Calling Tools with Arguments
+
+```typescript
+test("tools/call works", async () => {
+  const res = await client.request(
+    {
+      method: "tools/call",
+      params: { name: "createIssue", arguments: { 
+        title: "Test Issue", 
+        description: "Test Description",
+        teamId: "test-team-id"
+      } },
+    },
+    CallToolResultSchema,
+  );
+  expect(res.content[0].type).toBe("text");
+  // Verify the response content
+});
+```
+
+#### 3. Getting Prompts with Arguments
+
+```typescript
+test("prompts/get works", async () => {
+  const res = await client.request(
+    {
+      method: "prompts/get",
+      params: { name: "examplePrompt", arguments: { param: "value" } },
+    },
+    GetPromptResultSchema,
+  );
+  expect(res.messages[0].content.text).toContain("expected text");
+});
+```
+
+### Benefits of SDK-based E2E Testing
+
+1. **Faster Execution** - Tests run in-memory without process spawning overhead
+2. **Simplified Setup** - No need to manage stdio or JSON-RPC communication
+3. **Type Safety** - Leverages TypeScript types from the SDK
+4. **Direct Access** - Can directly inspect server state if needed
+5. **Easier Debugging** - Simpler stack traces and error handling
+
+### When to Use SDK-based E2E Testing
+
+SDK-based E2E testing is ideal for:
+
+- Testing core server logic without transport concerns
+- Rapid development and iteration
+- Testing complex interactions between components
+- Scenarios where you need to verify the entire request-response cycle
+
 ## Future Improvements
 
 1. **Increase Test Coverage** - Add tests for additional resources and tools
 2. **Integration Tests** - Add tests that verify multiple components working together
 3. **Snapshot Testing** - Use snapshot testing for complex response structures
 4. **Test Helpers** - Create helper functions to reduce test boilerplate
+5. **Combined Testing Approach** - Implement both MSW-based unit tests and SDK-based E2E tests
 
 ## Running Tests
 
