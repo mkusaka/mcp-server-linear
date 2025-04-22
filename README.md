@@ -4,16 +4,15 @@ Model Context Protocol (MCP) server for interacting with the Linear API. This se
 
 ## Overview
 
-The `mcp-server-linear` project serves as a bridge between client applications (particularly AI assistants and other tools) and Linear, providing a standardized interface for accessing and manipulating Linear resources. Clients can retrieve information about issues, projects, and labels, as well as create, update, and delete issues and comments.
+The `mcp-server-linear` project serves as a bridge between client applications (particularly AI assistants and other tools) and Linear, providing a standardized interface for accessing and manipulating Linear resources.
 
 Key features:
 
-- Retrieve Linear resources (issues, projects, labels, comments)
-- Create, update, and delete issues
-- Create, update, and delete comments
-- Manage issue labels, priority, estimates, and states
-- Advanced issue searching with flexible filtering options
+- Standardized access to Linear resources (issues, projects, initiatives, teams)
+- Full CRUD operations for issues and comments
+- Advanced issue filtering and search capabilities
 - Consistent error handling and response formats
+- Integration with AI assistants through MCP protocol
 
 ## Configuration
 
@@ -29,11 +28,7 @@ You can set up the `LINEAR_API_KEY` environment variable:
 2. Under "Personal API keys", click "Create key"
 3. Give your key a name (e.g., "MCP Server")
 4. Copy the generated API key
-5. Set the environment variable when running the server:
-
-```bash
-LINEAR_API_KEY=your_api_key_here pnpm run debug
-```
+5. Set the environment variable when running the server
 
 #### Option 2: OAuth Authentication
 
@@ -56,48 +51,15 @@ Alternatively, you can set the environment variables in your shell profile or us
 
 ### Starting the Server
 
-For development and testing, you can use the built-in inspector:
-
-```bash
-pnpm run debug
-```
-
-#### Command Line Options
-
-```bash
-# Enable logging (logs to linear-mcp.log by default)
-pnpm run start -- --debug
-
-# Enable logging with custom log file path
-pnpm run start -- --debug --log-file custom-path.log
-```
-
-### Integration with MCP Clients
-
-This MCP server can be integrated with various AI assistants and MCP-compatible clients:
-
-#### Running with npx
-
 You can run the MCP server directly using npx without installing it globally:
 
 ```bash
 LINEAR_API_KEY=your_api_key_here npx -y @mkusaka/mcp-server-linear
 ```
 
-#### MCP Inspector
+### Integration with MCP Clients
 
-For development and testing, you can use the MCP Inspector to interact with the server:
-
-```bash
-# Install the MCP Inspector globally
-pnpm install -g @modelcontextprotocol/inspector
-
-# Run the server with the inspector
-LINEAR_API_KEY=your_api_key_here mcp-inspector /path/to/mcp-server-linear/dist/index.js
-
-# Or using npx
-LINEAR_API_KEY=your_api_key_here npx -y @modelcontextprotocol/inspector @mkusaka/mcp-server-linear
-```
+This MCP server can be integrated with various AI assistants and MCP-compatible clients:
 
 #### Anthropic Claude Integration
 
@@ -157,10 +119,6 @@ Add the following to your Cursor configuration file (`~/.cursor/config.json`):
 }
 ```
 
-##### Claude API
-
-You can also use this MCP server directly with the Claude API that supports MCP. Configure your application to connect to the MCP server and provide the necessary authentication details.
-
 ### Available Tools
 
 This MCP server provides the following tools:
@@ -219,6 +177,29 @@ pnpm run watch
 
 # Run with inspector
 pnpm run debug
+```
+
+For development and testing, you can use the MCP Inspector to interact with the server:
+
+```bash
+# Install the MCP Inspector globally
+pnpm install -g @modelcontextprotocol/inspector
+
+# Run the server with the inspector
+LINEAR_API_KEY=your_api_key_here mcp-inspector /path/to/mcp-server-linear/dist/index.js
+
+# Or using npx
+LINEAR_API_KEY=your_api_key_here npx -y @modelcontextprotocol/inspector @mkusaka/mcp-server-linear
+```
+
+### Command Line Options
+
+```bash
+# Enable logging (logs to linear-mcp.log by default)
+pnpm run start -- --debug
+
+# Enable logging with custom log file path
+pnpm run start -- --debug --log-file custom-path.log
 ```
 
 ## Contributing
