@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type to bump (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org/'
+      
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+      
+      - name: Bump version
+        id: version
+        run: |
+          # Get current version
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Bump version using npm version
+          npm version ${{ github.event.inputs.version_type }} --no-git-tag-version
+          
+          # Get new version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Commit changes
+        run: |
+          git add package.json
+          git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
+          git push
+      
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Generate release notes from commits since last tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            RELEASE_NOTES=$(git log --pretty=format:"- %s" --no-merges)
+          else
+            RELEASE_NOTES=$(git log $LATEST_TAG..HEAD --pretty=format:"- %s" --no-merges)
+          fi
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.version.outputs.new_version }}
+          release_name: Release v${{ steps.version.outputs.new_version }}
+          body: |
+            ## Changes in this Release
+            
+            ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+          draft: false
+          prerelease: false
+      
+      - name: Trigger npm-publish workflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: npm-publish.yml
+          token: ${{ secrets.GITHUB_TOKEN }}

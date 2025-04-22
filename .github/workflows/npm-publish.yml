@@ -1,8 +1,12 @@
 name: Publish Package to npm
 
 on:
-  release:
-    types: [published]
+  workflow_call:
+    # This allows the workflow to be called from other workflows
+  
+  # Removed the release trigger to prevent running on release creation
+  # release:
+  #   types: [published]
 
 jobs:
   build:
