@@ -38,8 +38,8 @@ jobs:
       
       - name: Configure Git
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "github-actions@github.com"
       
       - name: Bump version
         id: version
@@ -62,34 +62,15 @@ jobs:
           git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
           git push
       
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          # Generate release notes from commits since last tag
-          LATEST_TAG=$(git describe --tags --abbrev=0 || echo "")
-          if [ -z "$LATEST_TAG" ]; then
-            RELEASE_NOTES=$(git log --pretty=format:"- %s" --no-merges)
-          else
-            RELEASE_NOTES=$(git log $LATEST_TAG..HEAD --pretty=format:"- %s" --no-merges)
-          fi
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
-          echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-      
       - name: Create Release
-        uses: actions/create-release@v1
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.version.outputs.new_version }}
-          release_name: Release v${{ steps.version.outputs.new_version }}
-          body: |
-            ## Changes in this Release
-            
-            ${{ steps.release_notes.outputs.RELEASE_NOTES }}
-          draft: false
-          prerelease: false
+        run: |
+          gh release create v${{ steps.version.outputs.new_version }} \
+            --title "Release v${{ steps.version.outputs.new_version }}" \
+            --generate-notes \
+            --verify-tag
       
       # Integrated npm-publish functionality
       - name: Run tests
