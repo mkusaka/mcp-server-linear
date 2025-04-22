@@ -80,6 +80,7 @@ export const UpdateIssueSchema = z.object({
     .describe("target issue id"),
   title: z.string().optional().describe("issue title"),
   description: z.string().optional().describe("issue description"),
+  projectId: z.string().optional().describe("target project id"),
 });
 
 export const DeleteIssueSchema = z.object({

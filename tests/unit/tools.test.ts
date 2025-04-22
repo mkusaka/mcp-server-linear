@@ -40,6 +40,7 @@ describe("Tool Handlers", () => {
           issueId: "mock-issue-id",
           title: "Updated Test Issue",
           description: "Updated Test Description",
+          projectId: "mock-project-id",
         },
         { auth: { apiKey: process.env.LINEAR_API_KEY } } as any,
       );

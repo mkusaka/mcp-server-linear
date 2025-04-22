@@ -166,6 +166,7 @@ describe("Issue Schemas", () => {
         issueId: "issue-123",
         title: "Updated Title",
         description: "Updated Description",
+        projectId: "project-123",
       };
 
       const result = UpdateIssueSchema.safeParse(validInput);
