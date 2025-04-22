@@ -7,8 +7,9 @@ import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   GetIssuePrioritiesSchema,
   GetIssueSchema,
+  GetIssueStatesSchema,
   GetProjectIssuesSchema,
-  GetStatusListSchema,
+  GetProjectStatusesSchema,
 } from "../schemas/issues.js";
 import { getLinearClient } from "../utils/linear.js";
 import { logger } from "../utils/logger.js";
@@ -311,8 +312,8 @@ export const getIssueResource: ToolCallback<
   }
 };
 
-export const getStatusListResource: ToolCallback<
-  typeof GetStatusListSchema.shape
+export const getProjectStatusesResource: ToolCallback<
+  typeof GetProjectStatusesSchema.shape
 > = async (args, extra) => {
   const client = getLinearClient();
   try {
@@ -347,6 +348,50 @@ export const getStatusListResource: ToolCallback<
           type: "text" as const,
           text: JSON.stringify(
             { error: "Failed to get project statuses" },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
+        },
+      ],
+    };
+  }
+};
+
+export const getIssueStatesResource: ToolCallback<
+  typeof GetIssueStatesSchema.shape
+> = async (args, extra) => {
+  const client = getLinearClient();
+  try {
+    const workflowStates = await client.workflowStates();
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            {
+              states: workflowStates.nodes.map((s) => ({
+                id: s.id,
+                name: s.name,
+              })),
+            },
+            null,
+            2,
+          ),
+          mimeType: "application/json",
+        },
+      ],
+    };
+  } catch (error) {
+    logger.error("Failed to get issue states", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(
+            { error: "Failed to get issue states" },
             null,
             2,
           ),

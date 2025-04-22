@@ -57,9 +57,13 @@ export const GetIssueSchema = z.object({
 
 export const GetViewerSchema = z.object({});
 
-export const GetStatusListSchema = z
+export const GetProjectStatusesSchema = z
   .object({})
-  .describe("get all available project or issue statuses in Linear");
+  .describe("get all available project statuses in Linear");
+
+export const GetIssueStatesSchema = z
+  .object({})
+  .describe("get all available issue states (workflow states) in Linear");
 
 export const GetIssuePrioritiesSchema = z
   .object({})
