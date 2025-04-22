@@ -119,6 +119,7 @@ export const updateIssueTool: ToolCallback<
     const updatedIssue = await issue.update({
       title: args.title,
       description: args.description,
+      projectId: args.projectId,
     });
 
     const issuePayload = await updatedIssue.issue;
