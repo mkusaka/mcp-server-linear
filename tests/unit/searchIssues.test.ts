@@ -39,13 +39,14 @@ vi.mock("../../src/utils/linear.js", () => {
       }),
       priority: 2,
       labels: Promise.resolve({
-        nodes: () => Promise.resolve([
-          {
-            id: "label-1",
-            name: "Bug",
-            color: "#ff0000",
-          },
-        ]),
+        nodes: () =>
+          Promise.resolve([
+            {
+              id: "label-1",
+              name: "Bug",
+              color: "#ff0000",
+            },
+          ]),
       }),
       createdAt: "2023-01-01T00:00:00Z",
       updatedAt: "2023-01-02T00:00:00Z",
@@ -166,8 +167,8 @@ describe("Search Issues Tool", () => {
         expect.objectContaining({
           filter: expect.objectContaining({
             team: expect.objectContaining({
-              id: expect.objectContaining({ eq: "team-1" })
-            })
+              id: expect.objectContaining({ eq: "team-1" }),
+            }),
           }),
           first: 10,
           orderBy: "createdAt",
@@ -200,9 +201,7 @@ describe("Search Issues Tool", () => {
     it("should handle errors gracefully", async () => {
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = getLinearClient();
-      mockClient.issues = vi
-        .fn()
-        .mockRejectedValue(new Error("API Error"));
+      mockClient.issues = vi.fn().mockRejectedValue(new Error("API Error"));
 
       const result = await searchIssuesTool({
         filter: {},
