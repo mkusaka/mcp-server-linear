@@ -10,96 +10,93 @@ vi.mock("../../src/schemas/issueFilters.js", () => {
 });
 
 vi.mock("../../src/utils/linear.js", () => {
-  const mockLinearClient = {
-    client: {
-      rawRequest: vi.fn(async (query, variables) => {
-        if (query.includes("SearchIssues")) {
-          return {
-            data: {
-              issues: {
-                pageInfo: {
-                  hasNextPage: false,
-                  endCursor: null,
-                },
-                nodes: [
-                  {
-                    id: "mock-issue-1",
-                    identifier: "MOCK-1",
-                    title: "Mock Issue 1",
-                    description: "Mock Issue 1 Description",
-                    url: "https://linear.app/team/issue/MOCK-1",
-                    state: {
-                      id: "state-1",
-                      name: "Todo",
-                      type: "unstarted",
-                      color: "#ff0000",
-                    },
-                    assignee: {
-                      id: "user-1",
-                      name: "User 1",
-                      email: "user1@example.com",
-                    },
-                    team: {
-                      id: "team-1",
-                      name: "Team 1",
-                      key: "TEAM1",
-                    },
-                    project: {
-                      id: "project-1",
-                      name: "Project 1",
-                    },
-                    priority: 2,
-                    labels: {
-                      nodes: [
-                        {
-                          id: "label-1",
-                          name: "Bug",
-                          color: "#ff0000",
-                        },
-                      ],
-                    },
-                    createdAt: "2023-01-01T00:00:00Z",
-                    updatedAt: "2023-01-02T00:00:00Z",
-                  },
-                  {
-                    id: "mock-issue-2",
-                    identifier: "MOCK-2",
-                    title: "Mock Issue 2",
-                    description: "Mock Issue 2 Description",
-                    url: "https://linear.app/team/issue/MOCK-2",
-                    state: {
-                      id: "state-2",
-                      name: "In Progress",
-                      type: "started",
-                      color: "#ffff00",
-                    },
-                    assignee: null,
-                    team: {
-                      id: "team-1",
-                      name: "Team 1",
-                      key: "TEAM1",
-                    },
-                    project: null,
-                    priority: 1,
-                    labels: {
-                      nodes: [],
-                    },
-                    createdAt: "2023-01-03T00:00:00Z",
-                    updatedAt: "2023-01-04T00:00:00Z",
-                  },
-                ],
-              },
-            },
-          };
-        }
-        throw new Error("Query not implemented in mock");
+  const mockIssues = [
+    {
+      id: "mock-issue-1",
+      identifier: "MOCK-1",
+      title: "Mock Issue 1",
+      description: "Mock Issue 1 Description",
+      url: "https://linear.app/team/issue/MOCK-1",
+      state: Promise.resolve({
+        id: "state-1",
+        name: "Todo",
+        type: "unstarted",
+        color: "#ff0000",
       }),
+      assignee: Promise.resolve({
+        id: "user-1",
+        name: "User 1",
+        email: "user1@example.com",
+      }),
+      team: Promise.resolve({
+        id: "team-1",
+        name: "Team 1",
+        key: "TEAM1",
+      }),
+      project: Promise.resolve({
+        id: "project-1",
+        name: "Project 1",
+      }),
+      priority: 2,
+      labels: Promise.resolve({
+        nodes: () =>
+          Promise.resolve([
+            {
+              id: "label-1",
+              name: "Bug",
+              color: "#ff0000",
+            },
+          ]),
+      }),
+      createdAt: "2023-01-01T00:00:00Z",
+      updatedAt: "2023-01-02T00:00:00Z",
+    },
+    {
+      id: "mock-issue-2",
+      identifier: "MOCK-2",
+      title: "Mock Issue 2",
+      description: "Mock Issue 2 Description",
+      url: "https://linear.app/team/issue/MOCK-2",
+      state: Promise.resolve({
+        id: "state-2",
+        name: "In Progress",
+        type: "started",
+        color: "#ffff00",
+      }),
+      assignee: null,
+      team: Promise.resolve({
+        id: "team-1",
+        name: "Team 1",
+        key: "TEAM1",
+      }),
+      project: null,
+      priority: 1,
+      labels: Promise.resolve({
+        nodes: () => Promise.resolve([]),
+      }),
+      createdAt: "2023-01-03T00:00:00Z",
+      updatedAt: "2023-01-04T00:00:00Z",
+    },
+  ];
+
+  const mockConnection = {
+    nodes: mockIssues,
+    pageInfo: {
+      hasNextPage: false,
+      endCursor: null,
+    },
+  };
+
+  const mockLinearClient = {
+    issues: vi.fn().mockResolvedValue(mockConnection),
+    client: {
+      rawRequest: vi.fn(), // Keep for backward compatibility
     },
   };
 
   return {
     resetLinearClient: vi.fn(),
-    getLinearClient: vi.fn(() => Promise.resolve(mockLinearClient)),
+    getLinearClient: vi.fn(() => mockLinearClient),
   };
 });
 
@@ -134,18 +131,17 @@ describe("Search Issues Tool", () => {
       expect(result.content[0].type).toBe("text");
 
       const data = JSON.parse(result.content[0].text);
-      expect(data).toHaveProperty("issues");
-      expect(data.issues.nodes).toHaveLength(2);
-      expect(data.issues.nodes[0].id).toBe("mock-issue-1");
-      expect(data.issues.nodes[1].id).toBe("mock-issue-2");
+      expect(data).toHaveProperty("nodes");
+      expect(data.nodes).toHaveLength(2);
+      expect(data.nodes[0].id).toBe("mock-issue-1");
+      expect(data.nodes[1].id).toBe("mock-issue-2");
 
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
 
-      expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
-        expect.stringContaining("query SearchIssues"),
+      expect(mockClient.issues).toHaveBeenCalledWith(
         expect.objectContaining({
-          filter: {},
+          filter: expect.any(Object),
           first: 50,
           orderBy: "updatedAt",
           orderDirection: "DESC",
@@ -155,7 +151,7 @@ describe("Search Issues Tool", () => {
 
     it("should search issues with custom parameters", async () => {
       const result = await searchIssuesTool({
-        filter: { team: { id: { eq: "team-1" } } },
+        filter: { teamId: "team-1" },
         first: 10,
         orderBy: "createdAt",
         orderDirection: "DESC",
@@ -167,27 +163,17 @@ describe("Search Issues Tool", () => {
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
 
-      expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
-        expect.stringContaining("query SearchIssues"),
+      expect(mockClient.issues).toHaveBeenCalledWith(
         expect.objectContaining({
-          filter: { team: { id: { eq: "team-1" } } },
+          filter: expect.objectContaining({
+            team: expect.objectContaining({
+              id: expect.objectContaining({ eq: "team-1" }),
+            }),
+          }),
           first: 10,
           orderBy: "createdAt",
           orderDirection: "DESC",
         }),
-      );
-
-      expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
-        expect.stringContaining("issues("),
-        expect.any(Object),
-      );
-      expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
-        expect.stringContaining("filter: $filter"),
-        expect.any(Object),
-      );
-      expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
-        expect.stringContaining("first: $first"),
-        expect.any(Object),
       );
     });
 
@@ -205,8 +191,7 @@ describe("Search Issues Tool", () => {
       const { getLinearClient } = await import("../../src/utils/linear.js");
       const mockClient = await getLinearClient();
 
-      expect(mockClient.client.rawRequest).toHaveBeenCalledWith(
-        expect.any(String),
+      expect(mockClient.issues).toHaveBeenCalledWith(
         expect.objectContaining({
           after: "cursor-123",
         }),
@@ -215,11 +200,8 @@ describe("Search Issues Tool", () => {
 
     it("should handle errors gracefully", async () => {
       const { getLinearClient } = await import("../../src/utils/linear.js");
-      const mockClientPromise = getLinearClient();
-      const mockClient = await mockClientPromise;
-      mockClient.client.rawRequest = vi
-        .fn()
-        .mockRejectedValue(new Error("API Error"));
+      const mockClient = getLinearClient();
+      mockClient.issues = vi.fn().mockRejectedValue(new Error("API Error"));
 
       const result = await searchIssuesTool({
         filter: {},
