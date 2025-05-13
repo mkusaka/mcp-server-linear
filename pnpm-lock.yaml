@@ -28,8 +28,8 @@ importers:
         version: 3.24.5(zod@3.24.3)
     devDependencies:
       '@modelcontextprotocol/inspector':
-        specifier: ^0.10.2
-        version: 0.10.2(@types/node@22.15.3)(typescript@5.8.3)
+        specifier: ^0.12.0
+        version: 0.12.0(@types/node@22.15.3)(typescript@5.8.3)
       '@types/node':
         specifier: ^22.14.1
         version: 22.15.3
@@ -336,24 +336,28 @@ packages:
     resolution: {integrity: sha512-1qdCxs2NhRmp2Q9QCrpXGgSMYK0KBzCYK0ZdLLjop3tyY9ldJn5/dvQQXf/EcsY2ZFhxmZata6mx8k6e6+hzMQ==}
     engines: {node: '>=12.x', yarn: 1.x}
 
-  '@modelcontextprotocol/inspector-cli@0.10.2':
-    resolution: {integrity: sha512-PE5U1py8lj2TjgB705H6ENl/khQAjEskQ+HzfqGhYZ2xXO9DC7meJahbxa8NyEh5vLXweKc0Inj3tLtGpL88uQ==}
+  '@modelcontextprotocol/inspector-cli@0.12.0':
+    resolution: {integrity: sha512-0sMKYqn2Dp3RwJPz/Ukz4FhRN8JNNTniCyOuzuCnb2r5ogLvi6eBaU0CQa2SnE33fFH9HFSOLSI3nHg7SzRJcQ==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector-client@0.10.2':
-    resolution: {integrity: sha512-gZfdkhtLEVjQslzKyyxTppm4iV2psuw6hkTtx+RULEopj+0dwE3mX4Ddl4uGcrz6eNv0bj/u7DE6azISIHSGXA==}
+  '@modelcontextprotocol/inspector-client@0.12.0':
+    resolution: {integrity: sha512-JJ6R6aXTNlhw1JxbURjP7vfS6EvR4d55qT2BAyyvIXO2Q54EhTsClusY99cEymegYuIbhQBd/jHNwgerdpLKow==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector-server@0.10.2':
-    resolution: {integrity: sha512-VXXMIdOlzyZ0eGG22glkfMH1cWOoHqrgEN6QvFaleXvRSaCp5WVe3M2gLXOyHRFVHimrDWKsGB0NjeXxb6xYuw==}
+  '@modelcontextprotocol/inspector-server@0.12.0':
+    resolution: {integrity: sha512-DEnfWwZFGJgXH5DoBaKPK92xfPtUtdM/dpWPuoMVXPln0KwCoIQnMP9aDo0tiWoNP+b6AjxHLTDn4zATtWx0WA==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector@0.10.2':
-    resolution: {integrity: sha512-P/ag1MJz7mdOpmlE5OUozehzw0AYDi1cuXUctcPBpNvbufpnmmIwpD79I0lN41ydH1vnH4c8MTork75KWmP/hQ==}
+  '@modelcontextprotocol/inspector@0.12.0':
+    resolution: {integrity: sha512-OsoN8ZKdDL/HLC7UHz5RnDlQWwfdofCCm+tvXZepGfZ7QoqmQsnpkiy27hkNTSUJfxpHueOId89Xg5NuUOd6wA==}
     hasBin: true
 
   '@modelcontextprotocol/sdk@1.10.2':
     resolution: {integrity: sha512-rb6AMp2DR4SN+kc6L1ta2NCpApyA9WYNx3CrTSZvGxq9wH71bRur+zRqPfg0vQ9mjywR7qZdX2RGHOPq3ss+tA==}
+    engines: {node: '>=18'}
+
+  '@modelcontextprotocol/sdk@1.11.2':
+    resolution: {integrity: sha512-H9vwztj5OAqHg9GockCQC06k1natgcxWQSRpQcPJf6i5+MWBzfKkRtxGbjQf0X2ihii0ffLZCRGbYV2f2bjNCQ==}
     engines: {node: '>=18'}
 
   '@mswjs/interceptors@0.37.6':
@@ -2441,17 +2445,17 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@modelcontextprotocol/inspector-cli@0.10.2':
+  '@modelcontextprotocol/inspector-cli@0.12.0':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.10.2
+      '@modelcontextprotocol/sdk': 1.11.2
       commander: 13.1.0
       spawn-rx: 5.1.2
     transitivePeerDependencies:
       - supports-color
 
-  '@modelcontextprotocol/inspector-client@0.10.2':
+  '@modelcontextprotocol/inspector-client@0.12.0':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.10.2
+      '@modelcontextprotocol/sdk': 1.11.2
       '@radix-ui/react-checkbox': 1.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog': 1.1.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-icons': 1.3.2(react@18.3.1)
@@ -2481,9 +2485,9 @@ snapshots:
       - supports-color
       - tailwindcss
 
-  '@modelcontextprotocol/inspector-server@0.10.2':
+  '@modelcontextprotocol/inspector-server@0.12.0':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.10.2
+      '@modelcontextprotocol/sdk': 1.11.2
       cors: 2.8.5
       express: 5.1.0
       ws: 8.18.1
@@ -2493,12 +2497,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@modelcontextprotocol/inspector@0.10.2(@types/node@22.15.3)(typescript@5.8.3)':
+  '@modelcontextprotocol/inspector@0.12.0(@types/node@22.15.3)(typescript@5.8.3)':
     dependencies:
-      '@modelcontextprotocol/inspector-cli': 0.10.2
-      '@modelcontextprotocol/inspector-client': 0.10.2
-      '@modelcontextprotocol/inspector-server': 0.10.2
-      '@modelcontextprotocol/sdk': 1.10.2
+      '@modelcontextprotocol/inspector-cli': 0.12.0
+      '@modelcontextprotocol/inspector-client': 0.12.0
+      '@modelcontextprotocol/inspector-server': 0.12.0
+      '@modelcontextprotocol/sdk': 1.11.2
       concurrently: 9.1.2
       shell-quote: 1.8.2
       spawn-rx: 5.1.2
@@ -2517,6 +2521,21 @@ snapshots:
       - utf-8-validate
 
   '@modelcontextprotocol/sdk@1.10.2':
+    dependencies:
+      content-type: 1.0.5
+      cors: 2.8.5
+      cross-spawn: 7.0.6
+      eventsource: 3.0.6
+      express: 5.1.0
+      express-rate-limit: 7.5.0(express@5.1.0)
+      pkce-challenge: 5.0.0
+      raw-body: 3.0.0
+      zod: 3.24.3
+      zod-to-json-schema: 3.24.5(zod@3.24.3)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@modelcontextprotocol/sdk@1.11.2':
     dependencies:
       content-type: 1.0.5
       cors: 2.8.5
