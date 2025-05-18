@@ -15,8 +15,8 @@ importers:
         specifier: ^1.10.1
         version: 1.10.2
       commander:
-        specifier: ^13.1.0
-        version: 13.1.0
+        specifier: ^14.0.0
+        version: 14.0.0
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -1069,6 +1069,10 @@ packages:
   commander@13.1.0:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
+
+  commander@14.0.0:
+    resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
+    engines: {node: '>=20'}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -3147,6 +3151,8 @@ snapshots:
       text-hex: 1.0.0
 
   commander@13.1.0: {}
+
+  commander@14.0.0: {}
 
   concat-map@0.0.1: {}
 
