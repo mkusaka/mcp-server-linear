@@ -63,6 +63,6 @@ jobs:
         run: pnpm test:coverage
       - name: Report coverage
         if: github.event_name == 'pull_request'
-        uses: davelosert/vitest-coverage-report-action@adec81c7327940e0578d70d0bbdd87b0ca21df55 # v2.8.2
+        uses: davelosert/vitest-coverage-report-action@15b5b41bb7d36796d89f4bf482b09529c53f3446 # v2.9.2
         with:
           file-coverage-mode: "all"
