@@ -31,13 +31,13 @@ importers:
         specifier: ^0.20.0
         version: 0.20.0(@preact/signals-core@1.13.0)(@types/node@22.19.11)(@types/react@18.3.28)(typescript@5.9.3)
       '@types/node':
-        specifier: ^22.19.11
+        specifier: ^22.14.1
         version: 22.19.11
       '@vitest/coverage-v8':
         specifier: ^3.1.1
         version: 3.2.4(vitest@3.2.4(@types/node@22.19.11)(msw@2.12.10(@types/node@22.19.11)(typescript@5.9.3))(yaml@2.7.1))
       msw:
-        specifier: ^2.12.10
+        specifier: ^2.7.5
         version: 2.12.10(@types/node@22.19.11)(typescript@5.9.3)
       prettier:
         specifier: ^3.5.3
