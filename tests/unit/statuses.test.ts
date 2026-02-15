@@ -7,8 +7,8 @@ import { resetLinearClient } from "../../src/utils/linear.js";
 
 vi.mock("@linear/sdk", () => {
   return {
-    LinearClient: vi.fn().mockImplementation(() => ({
-      projectStatuses: vi.fn().mockResolvedValue({
+    LinearClient: vi.fn().mockImplementation(function (this: any) {
+      this.projectStatuses = vi.fn().mockResolvedValue({
         nodes: [
           {
             id: "mock-project-status-1",
@@ -23,8 +23,8 @@ vi.mock("@linear/sdk", () => {
             position: 2,
           },
         ],
-      }),
-      workflowStates: vi.fn().mockResolvedValue({
+      });
+      this.workflowStates = vi.fn().mockResolvedValue({
         nodes: [
           {
             id: "mock-workflow-state-1",
@@ -37,8 +37,8 @@ vi.mock("@linear/sdk", () => {
             type: "unstarted",
           },
         ],
-      }),
-    })),
+      });
+    }),
     InvalidInputLinearError: class {},
     LinearError: class {},
     LinearDocument: {

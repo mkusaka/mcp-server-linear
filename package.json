@@ -35,13 +35,13 @@
   "devDependencies": {
     "@modelcontextprotocol/inspector": "^0.20.0",
     "@types/node": "^24.0.0",
-    "@vitest/coverage-v8": "^3.1.1",
+    "@vitest/coverage-v8": "^4.0.0",
     "msw": "^2.7.5",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "shx": "^0.4.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.1"
+    "vitest": "^4.0.0"
   },
   "dependencies": {
     "@linear/sdk": "^39.0.0",
