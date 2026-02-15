@@ -70,7 +70,6 @@ You can use this MCP server with Anthropic Claude through various clients:
 [Cline](https://github.com/saoudrizwan/cline) is a VS Code extension that allows you to use MCP servers with Claude AI:
 
 1. Open your Cline MCP settings file:
-
    - macOS: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
    - Windows: `%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
    - Linux: `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
