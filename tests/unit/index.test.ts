@@ -4,16 +4,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
   return {
-    McpServer: vi.fn().mockImplementation(() => ({
-      tool: vi.fn(),
-      connect: vi.fn().mockResolvedValue(undefined),
-    })),
+    McpServer: vi.fn().mockImplementation(function (this: any) {
+      this.tool = vi.fn();
+      this.connect = vi.fn().mockResolvedValue(undefined);
+    }),
   };
 });
 
 vi.mock("@modelcontextprotocol/sdk/server/stdio.js", () => {
   return {
-    StdioServerTransport: vi.fn().mockImplementation(() => ({})),
+    StdioServerTransport: vi.fn().mockImplementation(function () {}),
   };
 });
 
@@ -80,7 +80,9 @@ vi.mock("commander", () => {
   };
 
   return {
-    Command: vi.fn().mockImplementation(() => mockCommand),
+    Command: vi.fn().mockImplementation(function (this: any) {
+      Object.assign(this, mockCommand);
+    }),
   };
 });
 
@@ -117,17 +119,14 @@ describe("Server Initialization", () => {
     const mockConnect = vi
       .fn()
       .mockRejectedValue(new Error("Connection error"));
-    vi.mocked(McpServer).mockImplementation(
-      () =>
-        ({
-          tool: vi.fn(),
-          connect: mockConnect,
-          server: {} as any,
-          _registeredResources: {} as any,
-          _registeredResourceTemplates: {} as any,
-          _registeredTools: {} as any,
-        }) as any,
-    );
+    vi.mocked(McpServer).mockImplementation(function (this: any) {
+      this.tool = vi.fn();
+      this.connect = mockConnect;
+      this.server = {};
+      this._registeredResources = {};
+      this._registeredResourceTemplates = {};
+      this._registeredTools = {};
+    } as any);
 
     const mockExit = vi
       .spyOn(process, "exit")
