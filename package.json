@@ -33,7 +33,7 @@
   "author": "mkusaka <hinoshita1992@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@modelcontextprotocol/inspector": "^0.20.0",
+    "@modelcontextprotocol/inspector": "^0.21.0",
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "^4.0.0",
     "msw": "^2.7.5",
