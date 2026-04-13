@@ -22,6 +22,13 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@modelcontextprotocol/ext-apps",
+      "esbuild",
+      "msw"
+    ]
+  },
   "publishConfig": {
     "access": "public"
   },
