@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - "@modelcontextprotocol/ext-apps"
+  - esbuild
+  - msw
